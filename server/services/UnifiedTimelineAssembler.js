@@ -124,23 +124,28 @@ class UnifiedTimelineAssembler {
      * Load outputs from all detection pipelines
      */
     async loadAllPipelineOutputs(videoId, fullVideoId) {
-        // Try with full video ID (including username) first, then fall back to just video ID
+        // Try multiple formats: username_videoId, videoId, and videoId_1 (from download)
         const outputs = {
             yolo: await this.loadJsonFile(`object_detection_outputs/${fullVideoId}/${fullVideoId}_yolo_detections.json`) ||
-                  await this.loadJsonFile(`object_detection_outputs/${videoId}/${videoId}_yolo_detections.json`),
+                  await this.loadJsonFile(`object_detection_outputs/${videoId}/${videoId}_yolo_detections.json`) ||
+                  await this.loadJsonFile(`object_detection_outputs/${videoId}_1/${videoId}_1_yolo_detections.json`),
             mediapipe: await this.loadJsonFile(`human_analysis_outputs/${fullVideoId}/${fullVideoId}_human_analysis.json`) ||
-                       await this.loadJsonFile(`human_analysis_outputs/${videoId}/${videoId}_human_analysis.json`),
+                       await this.loadJsonFile(`human_analysis_outputs/${videoId}/${videoId}_human_analysis.json`) ||
+                       await this.loadJsonFile(`human_analysis_outputs/${videoId}_1/${videoId}_1_human_analysis.json`),
             ocr: await this.loadJsonFile(`creative_analysis_outputs/${fullVideoId}/${fullVideoId}_creative_analysis.json`) ||
-                 await this.loadJsonFile(`creative_analysis_outputs/${videoId}/${videoId}_creative_analysis.json`),
+                 await this.loadJsonFile(`creative_analysis_outputs/${videoId}/${videoId}_creative_analysis.json`) ||
+                 await this.loadJsonFile(`creative_analysis_outputs/${videoId}_1/${videoId}_1_creative_analysis.json`),
             audio: await this.loadJsonFile(`audio_analysis_outputs/${fullVideoId}/${fullVideoId}_audio_analysis.json`) ||
-                   await this.loadJsonFile(`audio_analysis_outputs/${videoId}/${videoId}_audio_analysis.json`),
+                   await this.loadJsonFile(`audio_analysis_outputs/${videoId}/${videoId}_audio_analysis.json`) ||
+                   await this.loadJsonFile(`audio_analysis_outputs/${videoId}_1/${videoId}_1_audio_analysis.json`),
             comprehensive: await this.loadJsonFile(`comprehensive_analysis_outputs/${fullVideoId}_comprehensive_analysis.json`) ||
                           await this.loadJsonFile(`comprehensive_analysis_outputs/${videoId}_comprehensive_analysis.json`),
             whisper: await this.loadJsonFile(`speech_transcriptions/${videoId}_whisper.json`) ||
                      await this.loadJsonFile(`speech_transcriptions/${fullVideoId}_whisper.json`),
-            // Add local scene detection output
+            // Add local scene detection output with multiple format support
             scenes: await this.loadJsonFile(`scene_detection_outputs/${fullVideoId}/${fullVideoId}_scenes.json`) ||
-                    await this.loadJsonFile(`scene_detection_outputs/${videoId}/${videoId}_scenes.json`)
+                    await this.loadJsonFile(`scene_detection_outputs/${videoId}/${videoId}_scenes.json`) ||
+                    await this.loadJsonFile(`scene_detection_outputs/${videoId}_1/${videoId}_1_scenes.json`)
         };
         
         console.log(`📊 Loaded pipeline outputs - YOLO: ${!!outputs.yolo}, MediaPipe: ${!!outputs.mediapipe}, OCR: ${!!outputs.ocr}, Scene: ${!!outputs.scenes}, Whisper: ${!!outputs.whisper}`);
@@ -820,6 +825,11 @@ class UnifiedTimelineAssembler {
             personScreenTimeRatio: localAnalysisMetadata?.enhancedHumanAnalysis?.person_screen_time_ratio || 0,
             eyeContactRatio: localAnalysisMetadata?.enhancedHumanAnalysis?.gaze_patterns?.eye_contact_ratio || 0,
             primaryActions: localAnalysisMetadata?.enhancedHumanAnalysis?.primary_actions || {},
+            
+            // OCR/Text detection data
+            textAnnotations: localAnalysisMetadata?.textAnnotations || [],
+            hasTextOverlays: (localAnalysisMetadata?.textAnnotations?.length > 0) || false,
+            textOverlayCount: localAnalysisMetadata?.textAnnotations?.length || 0,
             
             // GVI-specific metadata (if available) - exclude _raw data
             ...(this.filterRawData(localAnalysisMetadata) || {})

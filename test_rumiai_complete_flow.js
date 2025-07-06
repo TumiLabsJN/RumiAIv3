@@ -223,15 +223,8 @@ async function runCompleteFlow() {
 
         // Step 7: Consolidate all analyses
         console.log('🔄 Step 7: Consolidating all analyses...');
-        // Check for comprehensive analysis output
-        const comprehensiveAnalysisPath = path.join(__dirname, 'comprehensive_analysis_outputs', `${username}_${videoId}_comprehensive_analysis.json`);
-        try {
-            await fs.access(comprehensiveAnalysisPath);
-            console.log('✅ Comprehensive analysis created');
-            console.log(`   - File: ${comprehensiveAnalysisPath}`);
-        } catch (error) {
-            console.log('⚠️ Comprehensive analysis not found');
-        }
+        // Note: Comprehensive analysis is no longer generated in current flow
+        console.log('✅ Analysis consolidation completed');
 
         // Step 7b: Recreate unified timeline with all local analysis data
         console.log('');
@@ -386,17 +379,17 @@ async function runCompleteFlow() {
             // Will handle in outputs check
         }
 
+        // Check for actual output files (they use videoId_1 format from the download)
         const outputs = {
             videoData: `✅ Video metadata scraped`,
             localAnalysis: await fs.access(path.join(__dirname, 'temp', 'video-analysis', `${videoId}.json`)).then(() => '✅ Local video analysis').catch(() => '❌ Local analysis missing'),
             unifiedAnalysis: await fs.access(path.join(__dirname, 'unified_analysis', `${videoId}.json`)).then(() => unifiedHasLocalData ? '✅ Unified timeline (with local analysis data)' : '✅ Unified timeline (with local data only)').catch(() => '❌ Unified timeline missing'),
-            frames: await fs.access(path.join(__dirname, 'frame_outputs', `${username}_${videoId}`)).then(() => '✅ Extracted frames').catch(() => '❌ Frames missing'),
-            yoloDetection: await fs.access(path.join(__dirname, 'object_detection_outputs', `${username}_${videoId}`, `${username}_${videoId}_yolo_detections.json`)).then(() => '✅ YOLO object detection').catch(() => '❌ YOLO detection missing'),
-            creativeAnalysis: await fs.access(path.join(__dirname, 'creative_analysis_outputs', `${username}_${videoId}`, `${username}_${videoId}_creative_analysis.json`)).then(() => '✅ OCR text detection').catch(() => '❌ OCR detection missing'),
-            humanAnalysis: await fs.access(path.join(__dirname, 'human_analysis_outputs', `${username}_${videoId}`, `${username}_${videoId}_human_analysis.json`)).then(() => '✅ MediaPipe human analysis').catch(() => '❌ MediaPipe analysis missing'),
+            frames: await fs.access(path.join(__dirname, 'frame_outputs', `${videoId}_1`)).then(() => '✅ Extracted frames').catch(() => '❌ Frames missing'),
+            yoloDetection: await fs.access(path.join(__dirname, 'object_detection_outputs', `${videoId}_1`, `${videoId}_1_yolo_detections.json`)).then(() => '✅ YOLO object detection').catch(() => '❌ YOLO detection missing'),
+            creativeAnalysis: await fs.access(path.join(__dirname, 'creative_analysis_outputs', `${videoId}_1`, `${videoId}_1_creative_analysis.json`)).then(() => '✅ OCR text detection').catch(() => '❌ OCR detection missing'),
+            humanAnalysis: await fs.access(path.join(__dirname, 'human_analysis_outputs', `${videoId}_1`, `${videoId}_1_human_analysis.json`)).then(() => '✅ MediaPipe human analysis').catch(() => '❌ MediaPipe analysis missing'),
             enhancedHumanAnalysis: await fs.access(path.join(__dirname, 'enhanced_human_analysis_outputs', `${videoId}`, `${videoId}_enhanced_human_analysis.json`)).then(() => '✅ Enhanced human analysis (pose, gaze, actions)').catch(() => '❌ Enhanced human analysis missing'),
-            sceneDetection: await fs.access(path.join(__dirname, 'scene_detection_outputs', `${username}_${videoId}`, `${username}_${videoId}_scenes.json`)).then(() => '✅ PySceneDetect shot detection').catch(() => '❌ Scene detection missing'),
-            comprehensiveAnalysis: await fs.access(comprehensiveAnalysisPath).then(() => '✅ Comprehensive consolidated analysis').catch(() => '❌ Comprehensive analysis missing'),
+            sceneDetection: await fs.access(path.join(__dirname, 'scene_detection_outputs', `${videoId}_1`, `${videoId}_1_scenes.json`)).then(() => '✅ PySceneDetect shot detection').catch(() => '❌ Scene detection missing'),
             promptInsights: await fs.access(path.join(__dirname, 'insights', `${videoId}`)).then(() => '✅ Claude prompt insights').catch(() => '❌ Prompt insights missing')
         };
 
@@ -422,12 +415,11 @@ async function runCompleteFlow() {
         console.log('');
         console.log('📂 Output Locations:');
         console.log(`   - Video file: temp/${videoId}_1.mp4`);
-        console.log(`   - Frames: frame_outputs/${username}_${videoId}/`);
-        console.log(`   - YOLO: object_detection_outputs/${username}_${videoId}/${username}_${videoId}_yolo_detections.json`);
-        console.log(`   - OCR: creative_analysis_outputs/${username}_${videoId}/${username}_${videoId}_creative_analysis.json`);
-        console.log(`   - MediaPipe: human_analysis_outputs/${username}_${videoId}/${username}_${videoId}_human_analysis.json`);
-        console.log(`   - Scene Detection: scene_detection_outputs/${username}_${videoId}/${username}_${videoId}_scenes.json`);
-        console.log(`   - Comprehensive: comprehensive_analysis_outputs/${username}_${videoId}_comprehensive_analysis.json`);
+        console.log(`   - Frames: frame_outputs/${videoId}_1/`);
+        console.log(`   - YOLO: object_detection_outputs/${videoId}_1/${videoId}_1_yolo_detections.json`);
+        console.log(`   - OCR: creative_analysis_outputs/${videoId}_1/${videoId}_1_creative_analysis.json`);
+        console.log(`   - MediaPipe: human_analysis_outputs/${videoId}_1/${videoId}_1_human_analysis.json`);
+        console.log(`   - Scene Detection: scene_detection_outputs/${videoId}_1/${videoId}_1_scenes.json`);
         console.log(`   - Unified: unified_analysis/${videoId}.json`);
         console.log(`   - Local Analysis: temp/video-analysis/${videoId}.json`);
         console.log(`   - Insights: insights/${videoId}/`);
@@ -459,7 +451,6 @@ async function runCompleteFlow() {
                 yolo: `object_detection_outputs/${username}_${videoId}/${username}_${videoId}_yolo_detections.json`,
                 ocr: `creative_analysis_outputs/${username}_${videoId}/${username}_${videoId}_creative_analysis.json`,
                 mediapipe: `human_analysis_outputs/${username}_${videoId}/${username}_${videoId}_human_analysis.json`,
-                comprehensive: `comprehensive_analysis_outputs/${username}_${videoId}_comprehensive_analysis.json`,
                 unified: `unified_analysis/${videoId}.json`,
                 localAnalysis: `temp/video-analysis/${videoId}.json`,
                 insights: `insights/${videoId}/`

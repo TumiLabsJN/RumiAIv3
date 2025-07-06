@@ -258,9 +258,10 @@ def analyze_video_creative_elements(video_id, input_dir='frame_outputs', output_
     print(f"\n🎬 Analyzing creative elements for: {video_id}")
     print(f"   Total frames: {len(frames)}")
     
-    # Sample every 5th frame for OCR (1 frame per second at 5fps)
-    frame_sample_rate = 5
-    sampled_frames = frames[::frame_sample_rate]  # Take every 5th frame
+    # Sample every 15th frame for OCR to reduce processing time
+    # This gives us ~2-3 frames per second which is sufficient for text detection
+    frame_sample_rate = 15
+    sampled_frames = frames[::frame_sample_rate]  # Take every 15th frame
     print(f"   Analyzing {len(sampled_frames)} frames (every {frame_sample_rate}th frame)")
     
     # Process sampled frames

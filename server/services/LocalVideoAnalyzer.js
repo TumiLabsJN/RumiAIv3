@@ -99,9 +99,12 @@ class LocalVideoAnalyzer {
         const frameSkip = process.env.YOLO_FRAME_SKIP || '2';
         console.log(`📦 Running YOLO + DeepSort object tracking (frame skip: ${frameSkip})...`);
         
+        // Extract username from video path if available
+        const pathMatch = videoPath.match(/([^/]+)_(\d+)\.mp4$/);
+        const fullVideoId = pathMatch ? `${pathMatch[1]}_${pathMatch[2]}` : videoId;
+        
         return new Promise((resolve, reject) => {
             const script = path.join(this.pythonScriptsPath, 'object_tracking.py');
-            const outputFile = path.join(this.outputPath, 'object_tracking', `${videoId}_tracking.json`);
             
             const process = spawn(this.pythonPath, [
                 script,
@@ -137,7 +140,14 @@ class LocalVideoAnalyzer {
                         const data = await fs.readFile(trackingFile, 'utf8');
                         const result = JSON.parse(data);
                         
-                        // Clean up temp file
+                        // Save to the expected output directory BEFORE deleting temp file
+                        const outputDir = path.join(__dirname, '../../object_detection_outputs', fullVideoId);
+                        await fs.mkdir(outputDir, { recursive: true });
+                        const outputPath = path.join(outputDir, `${fullVideoId}_yolo_detections.json`);
+                        await fs.writeFile(outputPath, JSON.stringify(result, null, 2));
+                        console.log(`   💾 Saved YOLO detections to: ${outputPath}`);
+                        
+                        // Now clean up temp file
                         try {
                             await fs.unlink(trackingFile);
                         } catch (e) {
@@ -257,12 +267,12 @@ class LocalVideoAnalyzer {
             let errorOutput = '';
             let timedOut = false;
             
-            // Set a 20-second timeout for OCR
+            // Set a 5-minute timeout for OCR (EasyOCR is slow on CPU)
             const timeout = setTimeout(() => {
                 timedOut = true;
                 process.kill('SIGTERM');
-                console.log('   ⚠️ OCR timeout after 20s, returning partial results');
-            }, 20000);
+                console.log('   ⚠️ OCR timeout after 5 minutes, returning partial results');
+            }, 300000); // 5 minutes
             
             process.stdout.on('data', (data) => {
                 output += data.toString();
@@ -321,12 +331,19 @@ class LocalVideoAnalyzer {
     async runSceneDetect(videoPath, videoId) {
         console.log('🎬 Running scene detection...');
         
+        // Extract username from video path if available
+        const pathMatch = videoPath.match(/([^/]+)_(\d+)\.mp4$/);
+        const fullVideoId = pathMatch ? `${pathMatch[1]}_${pathMatch[2]}` : videoId;
+        
         return new Promise(async (resolve, reject) => {
             const script = path.join(this.pythonScriptsPath, 'scene_detection.py');
-            const outputDir = path.join(this.outputPath.replace(videoId, ''), 'scene_detection_outputs', videoId);
+            // Save to both locations for compatibility
+            const localOutputDir = path.join(this.outputPath.replace(videoId, ''), 'scene_detection_outputs', videoId);
+            const mainOutputDir = path.join(__dirname, '../../scene_detection_outputs', fullVideoId);
             
-            // Ensure output directory exists
-            await fs.mkdir(outputDir, { recursive: true });
+            // Ensure output directories exist
+            await fs.mkdir(localOutputDir, { recursive: true });
+            await fs.mkdir(mainOutputDir, { recursive: true });
             
             const process = spawn(this.pythonPath, [
                 script,
@@ -353,10 +370,15 @@ class LocalVideoAnalyzer {
                         const result = JSON.parse(output);
                         console.log(`   ✅ Detected ${result.total_scenes} scenes`);
                         
-                        // Save scene detection results to file
-                        const outputPath = path.join(outputDir, `${videoId}_scenes.json`);
-                        await fs.writeFile(outputPath, JSON.stringify(result, null, 2));
-                        console.log(`   💾 Saved scene detection to: ${outputPath}`);
+                        // Save scene detection results to both locations
+                        const localOutputPath = path.join(localOutputDir, `${videoId}_scenes.json`);
+                        await fs.writeFile(localOutputPath, JSON.stringify(result, null, 2));
+                        console.log(`   💾 Saved scene detection to: ${localOutputPath}`);
+                        
+                        // Also save to the expected location
+                        const mainOutputPath = path.join(mainOutputDir, `${fullVideoId}_scenes.json`);
+                        await fs.writeFile(mainOutputPath, JSON.stringify(result, null, 2));
+                        console.log(`   💾 Also saved to: ${mainOutputPath}`);
                         
                         resolve(result);
                     } catch (e) {
@@ -571,6 +593,19 @@ class LocalVideoAnalyzer {
             console.log('📊 Extracting video metadata...');
             const metadata = await this.extractVideoMetadata(videoPath);
             const timeline = new TimelineSynchronizer(metadata);
+            
+            // 1.5. Extract frames first (for all pipelines to use)
+            const pathMatch = videoPath.match(/([^/]+)_(\d+)\.mp4$/);
+            const fullVideoId = pathMatch ? `${pathMatch[1]}_${pathMatch[2]}` : videoId;
+            const frameDir = path.join(__dirname, '../../frame_outputs', fullVideoId);
+            
+            if (!await this.checkDirectoryExists(frameDir)) {
+                console.log('📸 Extracting frames for analysis...');
+                await this.extractFrames(videoPath, fullVideoId);
+                console.log(`   ✅ Frames extracted to: ${frameDir}`);
+            } else {
+                console.log('   ✅ Frames already extracted');
+            }
             
             // 2. Run all analyses in parallel
             console.log('\n🚀 Running parallel analysis...\n');
