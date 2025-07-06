@@ -1,0 +1,25 @@
+# Used by copy_clean.sh to create lightweight local duplicates of RumiAI
+
+venv/
+node_modules/
+downloads/
+temp/
+frame_outputs/
+enhanced_human_analysis_outputs/
+unified_analysis/
+insights/
+__pycache__/
+*.pyc
+*.pyo
+*.DS_Store
+*.log
+
+# Ignore contents of analysis output folders but keep the folders themselves
+human_analysis_outputs/**
+!human_analysis_outputs/
+
+creative_analysis_outputs/**
+!creative_analysis_outputs/
+
+speech_transcriptions/**
+!speech_transcriptions/

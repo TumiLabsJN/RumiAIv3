@@ -1,0 +1,45 @@
+RumiAI Setup Report
+Generated: 2025-07-04 13:51:34
+============================================================
+
+SUMMARY
+-------
+✅ Successes: 16
+⚠️  Warnings: 2
+❌ Errors: 1
+
+SUCCESSES
+---------
+✅ Python: Version 3.12.3 meets requirements (3.8+)
+✅ Node.js: Node v22.16.0, npm 10.9.2 found
+✅ FFmpeg: 6.1.1-3ubuntu5 found
+✅ Disk Space: 896.4GB free (11.0% used)
+✅ Internet: Connected (required for model downloads)
+✅ Git: git version 2.43.0
+✅ Python venv exists
+✅ Node modules exist
+✅ ANTHROPIC_API_KEY configured
+✅ APIFY_TOKEN configured
+✅ All prompt templates found
+✅ YOLOv8 cache writable
+✅ CLIP cache writable
+✅ Whisper cache writable
+✅ EasyOCR cache writable
+✅ copy_clean.sh has executable permission
+
+WARNINGS
+--------
+⚠️  CUDA/GPU: GPU found but PyTorch not installed yet
+⚠️  Python 3.12 may have compatibility issues
+
+ERRORS
+------
+❌ Failed to install Python packages
+
+============================================================
+
+NEXT STEPS
+----------
+1. Fix the errors listed above
+2. Run this script again to verify fixes
+3. Once all errors are resolved, run: python setup/verify_setup.py

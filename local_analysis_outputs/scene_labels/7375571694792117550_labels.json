@@ -1,0 +1,446 @@
+{
+  "video_path": "/home/jorge/RumiAIv2-clean/temp/7375571694792117550_1.mp4",
+  "frame_count": 16,
+  "frame_labels": [
+    {
+      "frame_number": 0,
+      "timestamp": 0.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.7705078125
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.1339111328125
+        },
+        {
+          "label": "text",
+          "confidence": 0.019287109375
+        },
+        {
+          "label": "kitchen",
+          "confidence": 0.01116180419921875
+        },
+        {
+          "label": "food",
+          "confidence": 0.010009765625
+        }
+      ]
+    },
+    {
+      "frame_number": 30,
+      "timestamp": 1.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.6943359375
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.1728515625
+        },
+        {
+          "label": "food",
+          "confidence": 0.034576416015625
+        },
+        {
+          "label": "kitchen",
+          "confidence": 0.0277862548828125
+        },
+        {
+          "label": "text",
+          "confidence": 0.0196990966796875
+        }
+      ]
+    },
+    {
+      "frame_number": 60,
+      "timestamp": 2.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.5224609375
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.2144775390625
+        },
+        {
+          "label": "food",
+          "confidence": 0.053375244140625
+        },
+        {
+          "label": "kitchen",
+          "confidence": 0.048614501953125
+        },
+        {
+          "label": "text",
+          "confidence": 0.0390625
+        }
+      ]
+    },
+    {
+      "frame_number": 90,
+      "timestamp": 3.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.7158203125
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.134521484375
+        },
+        {
+          "label": "text",
+          "confidence": 0.039154052734375
+        },
+        {
+          "label": "food",
+          "confidence": 0.0281982421875
+        },
+        {
+          "label": "kitchen",
+          "confidence": 0.025665283203125
+        }
+      ]
+    },
+    {
+      "frame_number": 120,
+      "timestamp": 4.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.5146484375
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.388427734375
+        },
+        {
+          "label": "kitchen",
+          "confidence": 0.0308990478515625
+        },
+        {
+          "label": "food",
+          "confidence": 0.0121002197265625
+        },
+        {
+          "label": "text",
+          "confidence": 0.01154327392578125
+        }
+      ]
+    },
+    {
+      "frame_number": 150,
+      "timestamp": 5.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.58447265625
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.2939453125
+        },
+        {
+          "label": "kitchen",
+          "confidence": 0.0391845703125
+        },
+        {
+          "label": "food",
+          "confidence": 0.0185089111328125
+        },
+        {
+          "label": "text",
+          "confidence": 0.0158233642578125
+        }
+      ]
+    },
+    {
+      "frame_number": 180,
+      "timestamp": 6.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.546875
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.262451171875
+        },
+        {
+          "label": "food",
+          "confidence": 0.04351806640625
+        },
+        {
+          "label": "text",
+          "confidence": 0.0276641845703125
+        },
+        {
+          "label": "product",
+          "confidence": 0.0251922607421875
+        }
+      ]
+    },
+    {
+      "frame_number": 210,
+      "timestamp": 7.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.58984375
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.336181640625
+        },
+        {
+          "label": "product",
+          "confidence": 0.01523590087890625
+        },
+        {
+          "label": "food",
+          "confidence": 0.01323699951171875
+        },
+        {
+          "label": "text",
+          "confidence": 0.0098419189453125
+        }
+      ]
+    },
+    {
+      "frame_number": 240,
+      "timestamp": 8.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.48193359375
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.43212890625
+        },
+        {
+          "label": "kitchen",
+          "confidence": 0.03179931640625
+        },
+        {
+          "label": "product",
+          "confidence": 0.0198974609375
+        },
+        {
+          "label": "food",
+          "confidence": 0.01000213623046875
+        }
+      ]
+    },
+    {
+      "frame_number": 270,
+      "timestamp": 9.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.6103515625
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.29736328125
+        },
+        {
+          "label": "kitchen",
+          "confidence": 0.04217529296875
+        },
+        {
+          "label": "product",
+          "confidence": 0.01480865478515625
+        },
+        {
+          "label": "food",
+          "confidence": 0.01369476318359375
+        }
+      ]
+    },
+    {
+      "frame_number": 300,
+      "timestamp": 10.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.7705078125
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.140380859375
+        },
+        {
+          "label": "product",
+          "confidence": 0.0251617431640625
+        },
+        {
+          "label": "food",
+          "confidence": 0.019287109375
+        },
+        {
+          "label": "kitchen",
+          "confidence": 0.0155029296875
+        }
+      ]
+    },
+    {
+      "frame_number": 330,
+      "timestamp": 11.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.7255859375
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.2178955078125
+        },
+        {
+          "label": "food",
+          "confidence": 0.0170745849609375
+        },
+        {
+          "label": "kitchen",
+          "confidence": 0.0137176513671875
+        },
+        {
+          "label": "product",
+          "confidence": 0.00537109375
+        }
+      ]
+    },
+    {
+      "frame_number": 360,
+      "timestamp": 12.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.82177734375
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.1259765625
+        },
+        {
+          "label": "food",
+          "confidence": 0.01328277587890625
+        },
+        {
+          "label": "kitchen",
+          "confidence": 0.0101776123046875
+        },
+        {
+          "label": "product",
+          "confidence": 0.00637054443359375
+        }
+      ]
+    },
+    {
+      "frame_number": 390,
+      "timestamp": 13.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.72314453125
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.149169921875
+        },
+        {
+          "label": "kitchen",
+          "confidence": 0.0289154052734375
+        },
+        {
+          "label": "product",
+          "confidence": 0.028472900390625
+        },
+        {
+          "label": "food",
+          "confidence": 0.0218353271484375
+        }
+      ]
+    },
+    {
+      "frame_number": 420,
+      "timestamp": 14.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.8544921875
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.0321044921875
+        },
+        {
+          "label": "product",
+          "confidence": 0.0306396484375
+        },
+        {
+          "label": "food",
+          "confidence": 0.0121917724609375
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.0112762451171875
+        }
+      ]
+    },
+    {
+      "frame_number": 450,
+      "timestamp": 15.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.84326171875
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.043304443359375
+        },
+        {
+          "label": "product",
+          "confidence": 0.02545166015625
+        },
+        {
+          "label": "kitchen",
+          "confidence": 0.0164337158203125
+        },
+        {
+          "label": "food",
+          "confidence": 0.01450347900390625
+        }
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "description": "tutorial",
+      "confidence": 0.673126220703125,
+      "frame_count": 16,
+      "sample_frames": [
+        0,
+        30,
+        60,
+        90,
+        120
+      ]
+    },
+    {
+      "description": "cooking",
+      "confidence": 0.3855794270833333,
+      "frame_count": 3,
+      "sample_frames": [
+        120,
+        210,
+        240
+      ]
+    }
+  ]
+}

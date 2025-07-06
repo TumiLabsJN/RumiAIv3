@@ -1,0 +1,2741 @@
+{
+  "video_path": "/home/jorge/RumiAIv2-clean/temp/7200835572137512235_1.mp4",
+  "frame_count": 103,
+  "frame_labels": [
+    {
+      "frame_number": 0,
+      "timestamp": 0.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.489501953125
+        },
+        {
+          "label": "face",
+          "confidence": 0.1717529296875
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.07867431640625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.05157470703125
+        },
+        {
+          "label": "indoor",
+          "confidence": 0.028045654296875
+        }
+      ]
+    },
+    {
+      "frame_number": 30,
+      "timestamp": 1.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.5419921875
+        },
+        {
+          "label": "face",
+          "confidence": 0.190185546875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.07806396484375
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.03863525390625
+        },
+        {
+          "label": "indoor",
+          "confidence": 0.019134521484375
+        }
+      ]
+    },
+    {
+      "frame_number": 60,
+      "timestamp": 2.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.5595703125
+        },
+        {
+          "label": "face",
+          "confidence": 0.1654052734375
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.08856201171875
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.0207061767578125
+        },
+        {
+          "label": "indoor",
+          "confidence": 0.0203857421875
+        }
+      ]
+    },
+    {
+      "frame_number": 90,
+      "timestamp": 3.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.43017578125
+        },
+        {
+          "label": "face",
+          "confidence": 0.26513671875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.049041748046875
+        },
+        {
+          "label": "indoor",
+          "confidence": 0.03759765625
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.0301971435546875
+        }
+      ]
+    },
+    {
+      "frame_number": 120,
+      "timestamp": 4.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.3779296875
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.18701171875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.10491943359375
+        },
+        {
+          "label": "face",
+          "confidence": 0.08428955078125
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.04656982421875
+        }
+      ]
+    },
+    {
+      "frame_number": 150,
+      "timestamp": 5.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.339599609375
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.319091796875
+        },
+        {
+          "label": "face",
+          "confidence": 0.08721923828125
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.07122802734375
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.025787353515625
+        }
+      ]
+    },
+    {
+      "frame_number": 180,
+      "timestamp": 6.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.66796875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1585693359375
+        },
+        {
+          "label": "face",
+          "confidence": 0.07373046875
+        },
+        {
+          "label": "person",
+          "confidence": 0.0169830322265625
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.014984130859375
+        }
+      ]
+    },
+    {
+      "frame_number": 210,
+      "timestamp": 7.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.58740234375
+        },
+        {
+          "label": "face",
+          "confidence": 0.1580810546875
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.043914794921875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.03582763671875
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.0292510986328125
+        }
+      ]
+    },
+    {
+      "frame_number": 240,
+      "timestamp": 8.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.498291015625
+        },
+        {
+          "label": "face",
+          "confidence": 0.1805419921875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.056793212890625
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.045623779296875
+        },
+        {
+          "label": "indoor",
+          "confidence": 0.042205810546875
+        }
+      ]
+    },
+    {
+      "frame_number": 270,
+      "timestamp": 9.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.72021484375
+        },
+        {
+          "label": "face",
+          "confidence": 0.1138916015625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.052978515625
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.01666259765625
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.01181793212890625
+        }
+      ]
+    },
+    {
+      "frame_number": 300,
+      "timestamp": 10.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.64306640625
+        },
+        {
+          "label": "face",
+          "confidence": 0.1729736328125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.04376220703125
+        },
+        {
+          "label": "indoor",
+          "confidence": 0.0168609619140625
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.0163421630859375
+        }
+      ]
+    },
+    {
+      "frame_number": 330,
+      "timestamp": 11.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.283935546875
+        },
+        {
+          "label": "face",
+          "confidence": 0.275146484375
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.09814453125
+        },
+        {
+          "label": "office",
+          "confidence": 0.042205810546875
+        },
+        {
+          "label": "person",
+          "confidence": 0.042205810546875
+        }
+      ]
+    },
+    {
+      "frame_number": 360,
+      "timestamp": 12.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.28857421875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.246826171875
+        },
+        {
+          "label": "face",
+          "confidence": 0.1953125
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.08941650390625
+        },
+        {
+          "label": "person",
+          "confidence": 0.024444580078125
+        }
+      ]
+    },
+    {
+      "frame_number": 390,
+      "timestamp": 13.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.5537109375
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.11248779296875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.11077880859375
+        },
+        {
+          "label": "face",
+          "confidence": 0.08624267578125
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.0258941650390625
+        }
+      ]
+    },
+    {
+      "frame_number": 420,
+      "timestamp": 14.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.35595703125
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.178955078125
+        },
+        {
+          "label": "face",
+          "confidence": 0.139404296875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.06378173828125
+        },
+        {
+          "label": "person",
+          "confidence": 0.04119873046875
+        }
+      ]
+    },
+    {
+      "frame_number": 450,
+      "timestamp": 15.0,
+      "labels": [
+        {
+          "label": "dancing",
+          "confidence": 0.195068359375
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1861572265625
+        },
+        {
+          "label": "face",
+          "confidence": 0.1668701171875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.1617431640625
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.04779052734375
+        }
+      ]
+    },
+    {
+      "frame_number": 480,
+      "timestamp": 16.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.43017578125
+        },
+        {
+          "label": "face",
+          "confidence": 0.2337646484375
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.06292724609375
+        },
+        {
+          "label": "person",
+          "confidence": 0.041259765625
+        },
+        {
+          "label": "office",
+          "confidence": 0.026641845703125
+        }
+      ]
+    },
+    {
+      "frame_number": 510,
+      "timestamp": 17.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.414306640625
+        },
+        {
+          "label": "face",
+          "confidence": 0.1573486328125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.11151123046875
+        },
+        {
+          "label": "bedroom",
+          "confidence": 0.04437255859375
+        },
+        {
+          "label": "indoor",
+          "confidence": 0.042327880859375
+        }
+      ]
+    },
+    {
+      "frame_number": 540,
+      "timestamp": 18.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.48583984375
+        },
+        {
+          "label": "face",
+          "confidence": 0.1844482421875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.062744140625
+        },
+        {
+          "label": "person",
+          "confidence": 0.04449462890625
+        },
+        {
+          "label": "bedroom",
+          "confidence": 0.02740478515625
+        }
+      ]
+    },
+    {
+      "frame_number": 570,
+      "timestamp": 19.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.18505859375
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.171142578125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.15576171875
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.1104736328125
+        },
+        {
+          "label": "person",
+          "confidence": 0.0771484375
+        }
+      ]
+    },
+    {
+      "frame_number": 600,
+      "timestamp": 20.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.177001953125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1490478515625
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.12359619140625
+        },
+        {
+          "label": "bathroom",
+          "confidence": 0.06024169921875
+        },
+        {
+          "label": "product",
+          "confidence": 0.054840087890625
+        }
+      ]
+    },
+    {
+      "frame_number": 630,
+      "timestamp": 21.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.2283935546875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1724853515625
+        },
+        {
+          "label": "product",
+          "confidence": 0.07769775390625
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.0654296875
+        },
+        {
+          "label": "office",
+          "confidence": 0.059600830078125
+        }
+      ]
+    },
+    {
+      "frame_number": 660,
+      "timestamp": 22.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.2197265625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.171142578125
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.061004638671875
+        },
+        {
+          "label": "indoor",
+          "confidence": 0.06005859375
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.05914306640625
+        }
+      ]
+    },
+    {
+      "frame_number": 690,
+      "timestamp": 23.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.27880859375
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1275634765625
+        },
+        {
+          "label": "office",
+          "confidence": 0.0738525390625
+        },
+        {
+          "label": "person",
+          "confidence": 0.07269287109375
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.05401611328125
+        }
+      ]
+    },
+    {
+      "frame_number": 720,
+      "timestamp": 24.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.2359619140625
+        },
+        {
+          "label": "face",
+          "confidence": 0.2115478515625
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.0655517578125
+        },
+        {
+          "label": "product",
+          "confidence": 0.06060791015625
+        },
+        {
+          "label": "indoor",
+          "confidence": 0.049468994140625
+        }
+      ]
+    },
+    {
+      "frame_number": 750,
+      "timestamp": 25.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.2548828125
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.2432861328125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.167236328125
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.064453125
+        },
+        {
+          "label": "office",
+          "confidence": 0.03851318359375
+        }
+      ]
+    },
+    {
+      "frame_number": 780,
+      "timestamp": 26.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.44921875
+        },
+        {
+          "label": "face",
+          "confidence": 0.1480712890625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.126708984375
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.0291748046875
+        },
+        {
+          "label": "performance",
+          "confidence": 0.02783203125
+        }
+      ]
+    },
+    {
+      "frame_number": 810,
+      "timestamp": 27.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.732421875
+        },
+        {
+          "label": "face",
+          "confidence": 0.08746337890625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.057373046875
+        },
+        {
+          "label": "indoor",
+          "confidence": 0.0224609375
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.01496124267578125
+        }
+      ]
+    },
+    {
+      "frame_number": 840,
+      "timestamp": 28.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.52001953125
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.09930419921875
+        },
+        {
+          "label": "music",
+          "confidence": 0.047637939453125
+        },
+        {
+          "label": "face",
+          "confidence": 0.047637939453125
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.0440673828125
+        }
+      ]
+    },
+    {
+      "frame_number": 870,
+      "timestamp": 29.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.79296875
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.048370361328125
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.027557373046875
+        },
+        {
+          "label": "product",
+          "confidence": 0.0235748291015625
+        },
+        {
+          "label": "face",
+          "confidence": 0.0198516845703125
+        }
+      ]
+    },
+    {
+      "frame_number": 900,
+      "timestamp": 30.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.2880859375
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.1219482421875
+        },
+        {
+          "label": "face",
+          "confidence": 0.11456298828125
+        },
+        {
+          "label": "product",
+          "confidence": 0.0787353515625
+        },
+        {
+          "label": "office",
+          "confidence": 0.04852294921875
+        }
+      ]
+    },
+    {
+      "frame_number": 930,
+      "timestamp": 31.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.4775390625
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.08697509765625
+        },
+        {
+          "label": "face",
+          "confidence": 0.0792236328125
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.05035400390625
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.04803466796875
+        }
+      ]
+    },
+    {
+      "frame_number": 960,
+      "timestamp": 32.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.33056640625
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.12164306640625
+        },
+        {
+          "label": "face",
+          "confidence": 0.08624267578125
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.071533203125
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.057464599609375
+        }
+      ]
+    },
+    {
+      "frame_number": 990,
+      "timestamp": 33.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.2086181640625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.10009765625
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.0897216796875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.08563232421875
+        },
+        {
+          "label": "product",
+          "confidence": 0.0780029296875
+        }
+      ]
+    },
+    {
+      "frame_number": 1020,
+      "timestamp": 34.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.300048828125
+        },
+        {
+          "label": "face",
+          "confidence": 0.1251220703125
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.11566162109375
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.08868408203125
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.06488037109375
+        }
+      ]
+    },
+    {
+      "frame_number": 1050,
+      "timestamp": 35.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.2423095703125
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.1492919921875
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.1337890625
+        },
+        {
+          "label": "face",
+          "confidence": 0.1126708984375
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.0557861328125
+        }
+      ]
+    },
+    {
+      "frame_number": 1080,
+      "timestamp": 36.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.4453125
+        },
+        {
+          "label": "face",
+          "confidence": 0.1468505859375
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.10577392578125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.08367919921875
+        },
+        {
+          "label": "performance",
+          "confidence": 0.0360107421875
+        }
+      ]
+    },
+    {
+      "frame_number": 1110,
+      "timestamp": 37.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.64013671875
+        },
+        {
+          "label": "face",
+          "confidence": 0.1280517578125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.050140380859375
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.0268402099609375
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.0268402099609375
+        }
+      ]
+    },
+    {
+      "frame_number": 1140,
+      "timestamp": 38.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.55029296875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.15283203125
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.07928466796875
+        },
+        {
+          "label": "performance",
+          "confidence": 0.035186767578125
+        },
+        {
+          "label": "face",
+          "confidence": 0.034637451171875
+        }
+      ]
+    },
+    {
+      "frame_number": 1170,
+      "timestamp": 39.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.259521484375
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.175537109375
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1524658203125
+        },
+        {
+          "label": "office",
+          "confidence": 0.04437255859375
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.03564453125
+        }
+      ]
+    },
+    {
+      "frame_number": 1200,
+      "timestamp": 40.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.269775390625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1610107421875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.1561279296875
+        },
+        {
+          "label": "office",
+          "confidence": 0.11602783203125
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.044036865234375
+        }
+      ]
+    },
+    {
+      "frame_number": 1230,
+      "timestamp": 41.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.177734375
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.175048828125
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.09368896484375
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.0880126953125
+        },
+        {
+          "label": "gaming",
+          "confidence": 0.06048583984375
+        }
+      ]
+    },
+    {
+      "frame_number": 1260,
+      "timestamp": 42.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.34521484375
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.12310791015625
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.0794677734375
+        },
+        {
+          "label": "office",
+          "confidence": 0.0770263671875
+        },
+        {
+          "label": "gaming",
+          "confidence": 0.05377197265625
+        }
+      ]
+    },
+    {
+      "frame_number": 1290,
+      "timestamp": 43.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.3154296875
+        },
+        {
+          "label": "office",
+          "confidence": 0.1796875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1688232421875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.04473876953125
+        },
+        {
+          "label": "gaming",
+          "confidence": 0.043365478515625
+        }
+      ]
+    },
+    {
+      "frame_number": 1320,
+      "timestamp": 44.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.35595703125
+        },
+        {
+          "label": "face",
+          "confidence": 0.1761474609375
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.0648193359375
+        },
+        {
+          "label": "product",
+          "confidence": 0.043182373046875
+        },
+        {
+          "label": "food",
+          "confidence": 0.034698486328125
+        }
+      ]
+    },
+    {
+      "frame_number": 1350,
+      "timestamp": 45.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.421875
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.150390625
+        },
+        {
+          "label": "face",
+          "confidence": 0.10833740234375
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.06671142578125
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.06170654296875
+        }
+      ]
+    },
+    {
+      "frame_number": 1380,
+      "timestamp": 46.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.308837890625
+        },
+        {
+          "label": "face",
+          "confidence": 0.1844482421875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.09716796875
+        },
+        {
+          "label": "person",
+          "confidence": 0.07806396484375
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.035186767578125
+        }
+      ]
+    },
+    {
+      "frame_number": 1410,
+      "timestamp": 47.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.292724609375
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.24267578125
+        },
+        {
+          "label": "indoor",
+          "confidence": 0.06329345703125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.06134033203125
+        },
+        {
+          "label": "office",
+          "confidence": 0.044189453125
+        }
+      ]
+    },
+    {
+      "frame_number": 1440,
+      "timestamp": 48.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.35009765625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.2481689453125
+        },
+        {
+          "label": "face",
+          "confidence": 0.1529541015625
+        },
+        {
+          "label": "indoor",
+          "confidence": 0.0438232421875
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.036895751953125
+        }
+      ]
+    },
+    {
+      "frame_number": 1470,
+      "timestamp": 49.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.452392578125
+        },
+        {
+          "label": "face",
+          "confidence": 0.1856689453125
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.065185546875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.04766845703125
+        },
+        {
+          "label": "person",
+          "confidence": 0.045501708984375
+        }
+      ]
+    },
+    {
+      "frame_number": 1500,
+      "timestamp": 50.0,
+      "labels": [
+        {
+          "label": "product",
+          "confidence": 0.59765625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.234130859375
+        },
+        {
+          "label": "food",
+          "confidence": 0.0592041015625
+        },
+        {
+          "label": "face",
+          "confidence": 0.0297698974609375
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.0186309814453125
+        }
+      ]
+    },
+    {
+      "frame_number": 1530,
+      "timestamp": 51.0,
+      "labels": [
+        {
+          "label": "product",
+          "confidence": 0.564453125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.2315673828125
+        },
+        {
+          "label": "food",
+          "confidence": 0.0604248046875
+        },
+        {
+          "label": "face",
+          "confidence": 0.0247955322265625
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.0240325927734375
+        }
+      ]
+    },
+    {
+      "frame_number": 1560,
+      "timestamp": 52.0,
+      "labels": [
+        {
+          "label": "product",
+          "confidence": 0.63720703125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.12744140625
+        },
+        {
+          "label": "food",
+          "confidence": 0.07977294921875
+        },
+        {
+          "label": "face",
+          "confidence": 0.055694580078125
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.02081298828125
+        }
+      ]
+    },
+    {
+      "frame_number": 1590,
+      "timestamp": 53.0,
+      "labels": [
+        {
+          "label": "product",
+          "confidence": 0.57080078125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1585693359375
+        },
+        {
+          "label": "food",
+          "confidence": 0.11968994140625
+        },
+        {
+          "label": "face",
+          "confidence": 0.05743408203125
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.0235595703125
+        }
+      ]
+    },
+    {
+      "frame_number": 1620,
+      "timestamp": 54.0,
+      "labels": [
+        {
+          "label": "product",
+          "confidence": 0.74951171875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.0625
+        },
+        {
+          "label": "food",
+          "confidence": 0.0494384765625
+        },
+        {
+          "label": "face",
+          "confidence": 0.04571533203125
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.01580810546875
+        }
+      ]
+    },
+    {
+      "frame_number": 1650,
+      "timestamp": 55.0,
+      "labels": [
+        {
+          "label": "product",
+          "confidence": 0.57470703125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.21142578125
+        },
+        {
+          "label": "food",
+          "confidence": 0.0802001953125
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.0367431640625
+        },
+        {
+          "label": "face",
+          "confidence": 0.020599365234375
+        }
+      ]
+    },
+    {
+      "frame_number": 1680,
+      "timestamp": 56.0,
+      "labels": [
+        {
+          "label": "product",
+          "confidence": 0.67041015625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1920166015625
+        },
+        {
+          "label": "food",
+          "confidence": 0.04931640625
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.017852783203125
+        },
+        {
+          "label": "face",
+          "confidence": 0.0152740478515625
+        }
+      ]
+    },
+    {
+      "frame_number": 1710,
+      "timestamp": 57.0,
+      "labels": [
+        {
+          "label": "product",
+          "confidence": 0.66845703125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.17431640625
+        },
+        {
+          "label": "food",
+          "confidence": 0.062164306640625
+        },
+        {
+          "label": "face",
+          "confidence": 0.0172576904296875
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.01523590087890625
+        }
+      ]
+    },
+    {
+      "frame_number": 1740,
+      "timestamp": 58.0,
+      "labels": [
+        {
+          "label": "product",
+          "confidence": 0.63427734375
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.22607421875
+        },
+        {
+          "label": "food",
+          "confidence": 0.032073974609375
+        },
+        {
+          "label": "face",
+          "confidence": 0.0207061767578125
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.01885986328125
+        }
+      ]
+    },
+    {
+      "frame_number": 1770,
+      "timestamp": 59.0,
+      "labels": [
+        {
+          "label": "product",
+          "confidence": 0.53515625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.314697265625
+        },
+        {
+          "label": "food",
+          "confidence": 0.0546875
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.0224456787109375
+        },
+        {
+          "label": "face",
+          "confidence": 0.01641845703125
+        }
+      ]
+    },
+    {
+      "frame_number": 1800,
+      "timestamp": 60.0,
+      "labels": [
+        {
+          "label": "product",
+          "confidence": 0.5927734375
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.2249755859375
+        },
+        {
+          "label": "food",
+          "confidence": 0.051788330078125
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.028594970703125
+        },
+        {
+          "label": "face",
+          "confidence": 0.025634765625
+        }
+      ]
+    },
+    {
+      "frame_number": 1830,
+      "timestamp": 61.0,
+      "labels": [
+        {
+          "label": "dancing",
+          "confidence": 0.300537109375
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1195068359375
+        },
+        {
+          "label": "face",
+          "confidence": 0.1123046875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.0821533203125
+        },
+        {
+          "label": "person",
+          "confidence": 0.057342529296875
+        }
+      ]
+    },
+    {
+      "frame_number": 1860,
+      "timestamp": 62.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.22607421875
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.16796875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.1209716796875
+        },
+        {
+          "label": "face",
+          "confidence": 0.08990478515625
+        },
+        {
+          "label": "bathroom",
+          "confidence": 0.057159423828125
+        }
+      ]
+    },
+    {
+      "frame_number": 1890,
+      "timestamp": 63.0,
+      "labels": [
+        {
+          "label": "dancing",
+          "confidence": 0.21728515625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1829833984375
+        },
+        {
+          "label": "face",
+          "confidence": 0.097900390625
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.090576171875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.06732177734375
+        }
+      ]
+    },
+    {
+      "frame_number": 1920,
+      "timestamp": 64.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.57080078125
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.086181640625
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.08489990234375
+        },
+        {
+          "label": "face",
+          "confidence": 0.0640869140625
+        },
+        {
+          "label": "person",
+          "confidence": 0.0322265625
+        }
+      ]
+    },
+    {
+      "frame_number": 1950,
+      "timestamp": 65.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.352783203125
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.2276611328125
+        },
+        {
+          "label": "face",
+          "confidence": 0.0584716796875
+        },
+        {
+          "label": "office",
+          "confidence": 0.050811767578125
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.050018310546875
+        }
+      ]
+    },
+    {
+      "frame_number": 1980,
+      "timestamp": 66.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.327880859375
+        },
+        {
+          "label": "face",
+          "confidence": 0.271728515625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.10809326171875
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.0709228515625
+        },
+        {
+          "label": "office",
+          "confidence": 0.034027099609375
+        }
+      ]
+    },
+    {
+      "frame_number": 2010,
+      "timestamp": 67.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.41796875
+        },
+        {
+          "label": "face",
+          "confidence": 0.1490478515625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.10565185546875
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.05926513671875
+        },
+        {
+          "label": "office",
+          "confidence": 0.0548095703125
+        }
+      ]
+    },
+    {
+      "frame_number": 2040,
+      "timestamp": 68.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.1767578125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.156005859375
+        },
+        {
+          "label": "face",
+          "confidence": 0.146484375
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.08612060546875
+        },
+        {
+          "label": "office",
+          "confidence": 0.07366943359375
+        }
+      ]
+    },
+    {
+      "frame_number": 2070,
+      "timestamp": 69.0,
+      "labels": [
+        {
+          "label": "dancing",
+          "confidence": 0.2213134765625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.130126953125
+        },
+        {
+          "label": "office",
+          "confidence": 0.1241455078125
+        },
+        {
+          "label": "face",
+          "confidence": 0.0997314453125
+        },
+        {
+          "label": "person",
+          "confidence": 0.07073974609375
+        }
+      ]
+    },
+    {
+      "frame_number": 2100,
+      "timestamp": 70.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.2958984375
+        },
+        {
+          "label": "face",
+          "confidence": 0.13134765625
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.102294921875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.1007080078125
+        },
+        {
+          "label": "person",
+          "confidence": 0.0809326171875
+        }
+      ]
+    },
+    {
+      "frame_number": 2130,
+      "timestamp": 71.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.30419921875
+        },
+        {
+          "label": "face",
+          "confidence": 0.1268310546875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.1068115234375
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.100341796875
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.06085205078125
+        }
+      ]
+    },
+    {
+      "frame_number": 2160,
+      "timestamp": 72.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.218017578125
+        },
+        {
+          "label": "face",
+          "confidence": 0.1954345703125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.145263671875
+        },
+        {
+          "label": "office",
+          "confidence": 0.10296630859375
+        },
+        {
+          "label": "person",
+          "confidence": 0.0777587890625
+        }
+      ]
+    },
+    {
+      "frame_number": 2190,
+      "timestamp": 73.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.315185546875
+        },
+        {
+          "label": "face",
+          "confidence": 0.1634521484375
+        },
+        {
+          "label": "office",
+          "confidence": 0.1376953125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.0848388671875
+        },
+        {
+          "label": "person",
+          "confidence": 0.0650634765625
+        }
+      ]
+    },
+    {
+      "frame_number": 2220,
+      "timestamp": 74.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.27880859375
+        },
+        {
+          "label": "face",
+          "confidence": 0.2138671875
+        },
+        {
+          "label": "office",
+          "confidence": 0.09637451171875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.06622314453125
+        },
+        {
+          "label": "person",
+          "confidence": 0.0557861328125
+        }
+      ]
+    },
+    {
+      "frame_number": 2250,
+      "timestamp": 75.0,
+      "labels": [
+        {
+          "label": "office",
+          "confidence": 0.299072265625
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.1871337890625
+        },
+        {
+          "label": "face",
+          "confidence": 0.16259765625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.0870361328125
+        },
+        {
+          "label": "person",
+          "confidence": 0.044464111328125
+        }
+      ]
+    },
+    {
+      "frame_number": 2280,
+      "timestamp": 76.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.3095703125
+        },
+        {
+          "label": "office",
+          "confidence": 0.1907958984375
+        },
+        {
+          "label": "face",
+          "confidence": 0.1710205078125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.0701904296875
+        },
+        {
+          "label": "person",
+          "confidence": 0.041259765625
+        }
+      ]
+    },
+    {
+      "frame_number": 2310,
+      "timestamp": 77.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.36572265625
+        },
+        {
+          "label": "face",
+          "confidence": 0.215087890625
+        },
+        {
+          "label": "office",
+          "confidence": 0.0828857421875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.0606689453125
+        },
+        {
+          "label": "person",
+          "confidence": 0.03509521484375
+        }
+      ]
+    },
+    {
+      "frame_number": 2340,
+      "timestamp": 78.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.3515625
+        },
+        {
+          "label": "face",
+          "confidence": 0.2003173828125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1007080078125
+        },
+        {
+          "label": "office",
+          "confidence": 0.04986572265625
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.043304443359375
+        }
+      ]
+    },
+    {
+      "frame_number": 2370,
+      "timestamp": 79.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.289794921875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.255859375
+        },
+        {
+          "label": "face",
+          "confidence": 0.1246337890625
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.08978271484375
+        },
+        {
+          "label": "person",
+          "confidence": 0.049591064453125
+        }
+      ]
+    },
+    {
+      "frame_number": 2400,
+      "timestamp": 80.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.323486328125
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.212158203125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.124755859375
+        },
+        {
+          "label": "person",
+          "confidence": 0.063720703125
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.03985595703125
+        }
+      ]
+    },
+    {
+      "frame_number": 2430,
+      "timestamp": 81.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.345458984375
+        },
+        {
+          "label": "face",
+          "confidence": 0.26904296875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.08465576171875
+        },
+        {
+          "label": "office",
+          "confidence": 0.048248291015625
+        },
+        {
+          "label": "person",
+          "confidence": 0.03997802734375
+        }
+      ]
+    },
+    {
+      "frame_number": 2460,
+      "timestamp": 82.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.47119140625
+        },
+        {
+          "label": "face",
+          "confidence": 0.170654296875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.11370849609375
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.032073974609375
+        },
+        {
+          "label": "person",
+          "confidence": 0.0265960693359375
+        }
+      ]
+    },
+    {
+      "frame_number": 2490,
+      "timestamp": 83.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.55908203125
+        },
+        {
+          "label": "face",
+          "confidence": 0.150390625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.08050537109375
+        },
+        {
+          "label": "office",
+          "confidence": 0.0305633544921875
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.0253448486328125
+        }
+      ]
+    },
+    {
+      "frame_number": 2520,
+      "timestamp": 84.0,
+      "labels": [
+        {
+          "label": "dancing",
+          "confidence": 0.2408447265625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.2027587890625
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.1707763671875
+        },
+        {
+          "label": "face",
+          "confidence": 0.0899658203125
+        },
+        {
+          "label": "performance",
+          "confidence": 0.070068359375
+        }
+      ]
+    },
+    {
+      "frame_number": 2550,
+      "timestamp": 85.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.17529296875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.1571044921875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.14990234375
+        },
+        {
+          "label": "office",
+          "confidence": 0.064453125
+        },
+        {
+          "label": "person",
+          "confidence": 0.0615234375
+        }
+      ]
+    },
+    {
+      "frame_number": 2580,
+      "timestamp": 86.0,
+      "labels": [
+        {
+          "label": "dancing",
+          "confidence": 0.15869140625
+        },
+        {
+          "label": "office",
+          "confidence": 0.14453125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.11981201171875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.112548828125
+        },
+        {
+          "label": "face",
+          "confidence": 0.09930419921875
+        }
+      ]
+    },
+    {
+      "frame_number": 2610,
+      "timestamp": 87.0,
+      "labels": [
+        {
+          "label": "dancing",
+          "confidence": 0.187744140625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1373291015625
+        },
+        {
+          "label": "face",
+          "confidence": 0.1103515625
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.10699462890625
+        },
+        {
+          "label": "office",
+          "confidence": 0.0782470703125
+        }
+      ]
+    },
+    {
+      "frame_number": 2640,
+      "timestamp": 88.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.230224609375
+        },
+        {
+          "label": "face",
+          "confidence": 0.137451171875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.1087646484375
+        },
+        {
+          "label": "office",
+          "confidence": 0.1087646484375
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.069091796875
+        }
+      ]
+    },
+    {
+      "frame_number": 2670,
+      "timestamp": 89.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.225341796875
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.221923828125
+        },
+        {
+          "label": "face",
+          "confidence": 0.09844970703125
+        },
+        {
+          "label": "office",
+          "confidence": 0.06561279296875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.0645751953125
+        }
+      ]
+    },
+    {
+      "frame_number": 2700,
+      "timestamp": 90.0,
+      "labels": [
+        {
+          "label": "dancing",
+          "confidence": 0.1990966796875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1729736328125
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.1434326171875
+        },
+        {
+          "label": "face",
+          "confidence": 0.08172607421875
+        },
+        {
+          "label": "bathroom",
+          "confidence": 0.052764892578125
+        }
+      ]
+    },
+    {
+      "frame_number": 2730,
+      "timestamp": 91.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.2203369140625
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.1612548828125
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.10247802734375
+        },
+        {
+          "label": "face",
+          "confidence": 0.0904541015625
+        },
+        {
+          "label": "office",
+          "confidence": 0.07269287109375
+        }
+      ]
+    },
+    {
+      "frame_number": 2760,
+      "timestamp": 92.0,
+      "labels": [
+        {
+          "label": "dancing",
+          "confidence": 0.290283203125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1068115234375
+        },
+        {
+          "label": "face",
+          "confidence": 0.100341796875
+        },
+        {
+          "label": "bathroom",
+          "confidence": 0.0689697265625
+        },
+        {
+          "label": "indoor",
+          "confidence": 0.059906005859375
+        }
+      ]
+    },
+    {
+      "frame_number": 2790,
+      "timestamp": 93.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.2181396484375
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.1571044921875
+        },
+        {
+          "label": "face",
+          "confidence": 0.1453857421875
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.08544921875
+        },
+        {
+          "label": "office",
+          "confidence": 0.0625
+        }
+      ]
+    },
+    {
+      "frame_number": 2820,
+      "timestamp": 94.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.27490234375
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.1448974609375
+        },
+        {
+          "label": "face",
+          "confidence": 0.111083984375
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.10113525390625
+        },
+        {
+          "label": "person",
+          "confidence": 0.05584716796875
+        }
+      ]
+    },
+    {
+      "frame_number": 2850,
+      "timestamp": 95.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.274169921875
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.1884765625
+        },
+        {
+          "label": "face",
+          "confidence": 0.11083984375
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.077392578125
+        },
+        {
+          "label": "person",
+          "confidence": 0.04693603515625
+        }
+      ]
+    },
+    {
+      "frame_number": 2880,
+      "timestamp": 96.0,
+      "labels": [
+        {
+          "label": "tutorial",
+          "confidence": 0.1966552734375
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.13720703125
+        },
+        {
+          "label": "face",
+          "confidence": 0.12890625
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.098876953125
+        },
+        {
+          "label": "office",
+          "confidence": 0.05291748046875
+        }
+      ]
+    },
+    {
+      "frame_number": 2910,
+      "timestamp": 97.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.156982421875
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.1385498046875
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.1241455078125
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.08270263671875
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.07415771484375
+        }
+      ]
+    },
+    {
+      "frame_number": 2940,
+      "timestamp": 98.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.165283203125
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.13916015625
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.11541748046875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.095703125
+        },
+        {
+          "label": "office",
+          "confidence": 0.05712890625
+        }
+      ]
+    },
+    {
+      "frame_number": 2970,
+      "timestamp": 99.0,
+      "labels": [
+        {
+          "label": "dancing",
+          "confidence": 0.328857421875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.148193359375
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.1348876953125
+        },
+        {
+          "label": "face",
+          "confidence": 0.07568359375
+        },
+        {
+          "label": "cooking",
+          "confidence": 0.043121337890625
+        }
+      ]
+    },
+    {
+      "frame_number": 3000,
+      "timestamp": 100.0,
+      "labels": [
+        {
+          "label": "face",
+          "confidence": 0.2401123046875
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.1456298828125
+        },
+        {
+          "label": "makeup",
+          "confidence": 0.12457275390625
+        },
+        {
+          "label": "office",
+          "confidence": 0.1134033203125
+        },
+        {
+          "label": "person",
+          "confidence": 0.08038330078125
+        }
+      ]
+    },
+    {
+      "frame_number": 3030,
+      "timestamp": 101.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.62548828125
+        },
+        {
+          "label": "face",
+          "confidence": 0.1087646484375
+        },
+        {
+          "label": "office",
+          "confidence": 0.0670166015625
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.045318603515625
+        },
+        {
+          "label": "dancing",
+          "confidence": 0.03265380859375
+        }
+      ]
+    },
+    {
+      "frame_number": 3060,
+      "timestamp": 102.0,
+      "labels": [
+        {
+          "label": "makeup",
+          "confidence": 0.3427734375
+        },
+        {
+          "label": "office",
+          "confidence": 0.2015380859375
+        },
+        {
+          "label": "face",
+          "confidence": 0.1497802734375
+        },
+        {
+          "label": "tutorial",
+          "confidence": 0.0880126953125
+        },
+        {
+          "label": "person",
+          "confidence": 0.037261962890625
+        }
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "description": "product",
+      "confidence": 0.6177645596590909,
+      "frame_count": 11,
+      "sample_frames": [
+        1500,
+        1530,
+        1560,
+        1590,
+        1620
+      ]
+    },
+    {
+      "description": "makeup",
+      "confidence": 0.48261876260080644,
+      "frame_count": 31,
+      "sample_frames": [
+        0,
+        30,
+        60,
+        90,
+        150
+      ]
+    },
+    {
+      "description": "tutorial",
+      "confidence": 0.40972900390625,
+      "frame_count": 16,
+      "sample_frames": [
+        120,
+        150,
+        420,
+        840,
+        870
+      ]
+    },
+    {
+      "description": "face",
+      "confidence": 0.3280436197916667,
+      "frame_count": 3,
+      "sample_frames": [
+        1260,
+        1290,
+        2400
+      ]
+    },
+    {
+      "description": "dancing",
+      "confidence": 0.314697265625,
+      "frame_count": 2,
+      "sample_frames": [
+        1830,
+        2970
+      ]
+    }
+  ]
+}
