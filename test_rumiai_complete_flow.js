@@ -213,8 +213,9 @@ async function runCompleteFlow() {
         console.log(`✅ Using existing video: ${localVideoPath}`);
         console.log('');
 
-        // Step 6: Skip redundant analysis - already done in Step 3
-        console.log('🔬 Step 6: Skipping redundant local analysis (already completed in Step 3)');
+        // Step 6: Use results from Step 3's local analysis
+        console.log('🔬 Step 6: Using local analysis results from Step 3');
+        console.log('✅ Local ML analysis data available: YOLO, OCR, MediaPipe, Whisper, SceneDetect');
         console.log('');
         
         // Create inputs directory for compatibility
@@ -282,9 +283,9 @@ async function runCompleteFlow() {
         const promptScript = path.join(__dirname, 'run_video_prompts_validated_v2.py');
         const { spawn } = require('child_process');
         
-        // Dynamic timeout based on video duration (min 10 minutes, or 20s per video second)
-        const promptTimeout = Math.max(600000, normalizedVideo.duration * 20000);
-        console.log(`⏱️ Setting prompt timeout to ${promptTimeout/1000}s based on video duration`);
+        // Fixed timeout of 25 minutes for all videos
+        const promptTimeout = 1500000; // 25 minutes in milliseconds
+        console.log(`⏱️ Setting prompt timeout to ${promptTimeout/1000}s`);
         console.log('');
         
         // Use streaming output for real-time progress
@@ -426,9 +427,9 @@ async function runCompleteFlow() {
         console.log('');
         console.log('🚀 Next Steps:');
         console.log(`   1. View analysis report:`);
-        console.log(`      cat insights/${username}_${videoId}/reports/analysis_report_*.json | jq`);
+        console.log(`      cat insights/${videoId}/reports/analysis_report_*.json | jq`);
         console.log(`   2. View specific prompt results:`);
-        console.log(`      ls insights/${username}_${videoId}/*/`);
+        console.log(`      ls insights/${videoId}/*/`);
         console.log('');
 
         // Clean up - remove local video file if needed

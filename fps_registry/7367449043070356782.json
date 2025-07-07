@@ -1,0 +1,40 @@
+{
+  "video_id": "7367449043070356782",
+  "video_specs": {
+    "original_fps": 30.0,
+    "duration": 66.36666666666666,
+    "total_frames": 1991
+  },
+  "analysis_contexts": {
+    "scene_detection": {
+      "fps": 30.0,
+      "timestamp_format": "frame-frame+1s",
+      "uses_original_fps": true,
+      "description": "PySceneDetect runs on original 30fps video"
+    },
+    "frame_extraction": {
+      "fps": 1.0,
+      "sampling_rate": 30,
+      "timestamp_format": "frame-frame+1s",
+      "description": "Frames extracted at 1fps for ML analysis"
+    },
+    "ocr_analysis": {
+      "effective_fps": 0.067,
+      "parent_fps": 1.0,
+      "sampling_rate": 15,
+      "description": "OCR runs on every 15th frame of the 1fps extraction"
+    },
+    "yolo_tracking": {
+      "fps": 1.0,
+      "timestamp_format": "frame-frame+1s",
+      "description": "YOLO runs on 1fps extracted frames"
+    },
+    "mediapipe": {
+      "fps": 1.0,
+      "timestamp_format": "frame-frame+1s",
+      "description": "MediaPipe runs on 1fps extracted frames"
+    }
+  },
+  "created_at": "2025-07-07",
+  "version": "1.0"
+}

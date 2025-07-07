@@ -5,11 +5,21 @@ Combines YOLO with specialized detectors for TikTok-specific elements
 """
 
 import os
+import sys
 import cv2
 import json
 import numpy as np
 from datetime import datetime
 import glob
+
+# Check for PyTorch and CUDA availability
+try:
+    import torch
+    TORCH_AVAILABLE = True
+    CUDA_AVAILABLE = torch.cuda.is_available()
+except ImportError:
+    TORCH_AVAILABLE = False
+    CUDA_AVAILABLE = False
 
 # Install with: pip install easyocr
 try:
@@ -26,10 +36,38 @@ class TikTokCreativeDetector:
         # Initialize YOLO for general objects
         self.yolo_model = YOLO('yolov8n.pt')
         
-        # Initialize text detector if available
+        # Initialize text detector with GPU support if available
         if EASYOCR_AVAILABLE:
-            print("📝 Initializing text detector...")
-            self.text_reader = easyocr.Reader(['en'], gpu=False)
+            # Check environment variable for GPU preference
+            gpu_mode = os.environ.get('RUMIAI_USE_GPU', 'auto').lower()
+            
+            if gpu_mode == 'true':
+                use_gpu = True
+            elif gpu_mode == 'false':
+                use_gpu = False
+            else:  # auto mode
+                use_gpu = CUDA_AVAILABLE
+                
+            # Initialize with proper GPU detection
+            if use_gpu and CUDA_AVAILABLE:
+                try:
+                    print("🚀 Initializing text detector with GPU acceleration...")
+                    # Check available VRAM before initialization
+                    if TORCH_AVAILABLE:
+                        vram_gb = torch.cuda.get_device_properties(0).total_memory / 1024**3
+                        print(f"   GPU: {torch.cuda.get_device_name(0)} ({vram_gb:.1f}GB VRAM)")
+                    
+                    self.text_reader = easyocr.Reader(['en'], gpu=True)
+                    print("   ✅ OCR using GPU acceleration")
+                except Exception as e:
+                    print(f"   ⚠️ GPU initialization failed: {e}")
+                    print("   📝 Falling back to CPU mode...")
+                    self.text_reader = easyocr.Reader(['en'], gpu=False)
+            else:
+                print("📝 Initializing text detector (CPU mode)...")
+                if gpu_mode == 'auto' and not CUDA_AVAILABLE:
+                    print("   ℹ️ No CUDA-capable GPU detected")
+                self.text_reader = easyocr.Reader(['en'], gpu=False)
         else:
             self.text_reader = None
         
@@ -273,9 +311,12 @@ def analyze_video_creative_elements(video_id, input_dir='frame_outputs', output_
         'creative_timeline': []
     }
     
+    import time
+    start_time = time.time()
+    
     for idx, frame_path in enumerate(sampled_frames):
+        frame_start = time.time()
         actual_frame_num = idx * frame_sample_rate + 1  # Calculate actual frame number
-        print(f"   Processing frame {idx+1}/{len(sampled_frames)} (frame #{actual_frame_num})", end='\r')
         
         # Detect elements
         frame_results = detector.detect_all_elements(frame_path)
@@ -291,6 +332,16 @@ def analyze_video_creative_elements(video_id, input_dir='frame_outputs', output_
             creative_timeline['ui_timeline'].append(actual_frame_num)
         if frame_results['summary']['has_creative']:
             creative_timeline['creative_timeline'].append(actual_frame_num)
+            
+        # Show progress with timing
+        frame_time = time.time() - frame_start
+        elapsed = time.time() - start_time
+        avg_time = elapsed / (idx + 1)
+        eta = avg_time * (len(sampled_frames) - idx - 1)
+        
+        print(f"   Processing frame {idx+1}/{len(sampled_frames)} "
+              f"(frame #{actual_frame_num}) - {frame_time:.1f}s/frame, "
+              f"ETA: {eta:.0f}s", end='\r')
     
     print(f"\n   ✅ Analysis complete")
     

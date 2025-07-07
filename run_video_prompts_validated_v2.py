@@ -2298,7 +2298,7 @@ def compute_person_framing_metrics(expression_timeline, object_timeline, camera_
     return metrics
 
 
-def compute_scene_pacing_metrics(scene_timeline, video_duration, object_timeline=None, camera_distance_timeline=None):
+def compute_scene_pacing_metrics(scene_timeline, video_duration, object_timeline=None, camera_distance_timeline=None, video_id=None):
     """Compute scene pacing metrics for ML-ready analysis
     
     Args:
@@ -2306,6 +2306,7 @@ def compute_scene_pacing_metrics(scene_timeline, video_duration, object_timeline
         video_duration: Video duration in seconds
         object_timeline: Timeline of detected objects (optional)
         camera_distance_timeline: Timeline of camera distances (optional)
+        video_id: Video ID for FPS context lookup (optional)
         
     Returns:
         dict: Comprehensive scene pacing metrics
@@ -2314,6 +2315,15 @@ def compute_scene_pacing_metrics(scene_timeline, video_duration, object_timeline
     shot_durations = []
     shot_transitions = []
     scene_changes = []
+    
+    # Import FPS context manager if video_id provided
+    fps_manager = None
+    if video_id:
+        try:
+            from fps_utils import FPSContextManager
+            fps_manager = FPSContextManager(video_id)
+        except ImportError:
+            print("⚠️ FPS context manager not available, using legacy behavior")
     
     # Convert scene timeline to sorted list
     timestamps = sorted(scene_timeline.keys(), key=lambda x: parse_timestamp_to_seconds(x) or 0)
@@ -2614,7 +2624,25 @@ def compute_scene_pacing_metrics(scene_timeline, video_duration, object_timeline
     
     # Longest shot moment
     longest_idx = shot_durations.index(max_shot_duration) if shot_durations else 0
-    longest_timestamp = f"{int(scene_times[longest_idx])}-{int(scene_times[longest_idx] + max_shot_duration)}s" if longest_idx < len(scene_times) else "0-0s"
+    
+    # Use FPS-aware timestamp generation if available
+    if fps_manager and longest_idx < len(timestamps):
+        timestamp_key = timestamps[longest_idx]
+        scene_data = scene_timeline.get(timestamp_key, {})
+        longest_timestamp = fps_manager.get_display_timestamp(scene_data, max_shot_duration, context='scene_detection')
+    elif longest_idx < len(scene_times):
+        # Legacy behavior - but with sanity check
+        if scene_times[longest_idx] < video_duration:
+            # Looks like seconds
+            longest_timestamp = f"{int(scene_times[longest_idx])}-{int(scene_times[longest_idx] + max_shot_duration)}s"
+        else:
+            # Looks like frames - estimate position
+            position_pct = longest_idx / len(scene_times) if len(scene_times) > 0 else 0.5
+            estimated_start = int(video_duration * position_pct)
+            estimated_end = min(int(estimated_start + 2), int(video_duration))  # Assume 2 second shot
+            longest_timestamp = f"{estimated_start}-{estimated_end}s"
+    else:
+        longest_timestamp = "0-0s"
     
     if scene_times and longest_idx < len(scene_times):
         position_ratio = scene_times[longest_idx] / video_duration
@@ -2635,7 +2663,25 @@ def compute_scene_pacing_metrics(scene_timeline, video_duration, object_timeline
     
     # Shortest shot moment
     shortest_idx = shot_durations.index(min_shot_duration) if shot_durations else 0
-    shortest_timestamp = f"{int(scene_times[shortest_idx])}-{int(scene_times[shortest_idx] + min_shot_duration)}s" if shortest_idx < len(scene_times) else "0-0s"
+    
+    # Use FPS-aware timestamp generation if available
+    if fps_manager and shortest_idx < len(timestamps):
+        timestamp_key = timestamps[shortest_idx]
+        scene_data = scene_timeline.get(timestamp_key, {})
+        shortest_timestamp = fps_manager.get_display_timestamp(scene_data, min_shot_duration, context='scene_detection')
+    elif shortest_idx < len(scene_times):
+        # Legacy behavior - but with sanity check
+        if scene_times[shortest_idx] < video_duration:
+            # Looks like seconds
+            shortest_timestamp = f"{int(scene_times[shortest_idx])}-{int(scene_times[shortest_idx] + min_shot_duration)}s"
+        else:
+            # Looks like frames - estimate position
+            position_pct = shortest_idx / len(scene_times) if len(scene_times) > 0 else 0.5
+            estimated_start = int(video_duration * position_pct)
+            estimated_end = min(int(estimated_start + 1), int(video_duration))  # Assume 1 second shot
+            shortest_timestamp = f"{estimated_start}-{estimated_end}s"
+    else:
+        shortest_timestamp = "0-0s"
     
     if scene_times and shortest_idx < len(scene_times):
         position_ratio = scene_times[shortest_idx] / video_duration
@@ -3868,7 +3914,8 @@ def extract_real_ml_data(unified_data, prompt_name, video_id=None):
             scene_timeline=timelines.get('sceneChangeTimeline', {}),
             video_duration=unified_data.get('duration_seconds', 30),
             object_timeline=timelines.get('objectTimeline', {}),
-            camera_distance_timeline=timelines.get('cameraDistanceTimeline', {})
+            camera_distance_timeline=timelines.get('cameraDistanceTimeline', {}),
+            video_id=video_id  # Pass video_id for FPS context
         )
 
         # Add metrics to context data
@@ -4197,13 +4244,51 @@ def main():
     ]
     
     print(f"\n🧠 Running {len(prompts)} Claude prompts for video {video_id}")
+    print("=" * 60)
     
     successful = 0
-    for prompt_name in prompts:
+    failed = 0
+    start_time = time.time()
+    prompt_times = []
+    
+    for i, prompt_name in enumerate(prompts, 1):
+        prompt_start = time.time()
+        
+        # Progress indicator
+        progress_bar = "█" * (i - 1) + "▓" + "░" * (len(prompts) - i)
+        print(f"\n[{progress_bar}] {i}/{len(prompts)} ({i*100//len(prompts)}%)")
+        
+        # Estimated time remaining
+        if prompt_times:
+            avg_time = sum(prompt_times) / len(prompt_times)
+            remaining_prompts = len(prompts) - i + 1
+            eta_seconds = avg_time * remaining_prompts
+            eta_minutes = eta_seconds / 60
+            print(f"⏱️  Estimated time remaining: {eta_minutes:.1f} minutes")
+        
+        # Run the prompt
         if run_single_prompt(video_id, prompt_name):
             successful += 1
+        else:
+            failed += 1
+        
+        # Track time for this prompt
+        prompt_time = time.time() - prompt_start
+        prompt_times.append(prompt_time)
+        print(f"⏱️  {prompt_name} completed in {prompt_time:.1f}s")
     
-    print(f"\n📊 Summary: {successful}/{len(prompts)} prompts completed successfully")
+    # Final summary
+    total_time = time.time() - start_time
+    total_minutes = total_time / 60
+    
+    print("\n" + "=" * 60)
+    print(f"📊 FINAL SUMMARY")
+    print(f"   ✅ Successful: {successful}/{len(prompts)}")
+    if failed > 0:
+        print(f"   ❌ Failed: {failed}/{len(prompts)}")
+    print(f"   ⏱️  Total time: {total_minutes:.1f} minutes")
+    print(f"   📍 Results location: insights/{video_id}/")
+    print("=" * 60 + "\n")
     
     return 0 if successful == len(prompts) else 1
 if __name__ == "__main__":
