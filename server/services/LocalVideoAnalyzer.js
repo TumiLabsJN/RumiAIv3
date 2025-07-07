@@ -95,9 +95,9 @@ class LocalVideoAnalyzer {
      * Run YOLO with DeepSort tracking (with frame sampling for performance)
      */
     async runYOLOWithDeepSort(videoPath, videoId) {
-        // Process every 3rd frame for faster performance (frame_skip=2 means skip 2, process 1)
-        const frameSkip = process.env.YOLO_FRAME_SKIP || '2';
-        console.log(`📦 Running YOLO + DeepSort object tracking (frame skip: ${frameSkip})...`);
+        // Use adaptive frame skipping based on video duration (-1 = adaptive mode)
+        const frameSkip = process.env.YOLO_FRAME_SKIP || '-1';
+        console.log(`📦 Running YOLO + DeepSort object tracking (adaptive frame sampling)...`);
         
         // Extract username from video path if available
         const pathMatch = videoPath.match(/([^/]+)_(\d+)\.mp4$/);
@@ -258,10 +258,17 @@ class LocalVideoAnalyzer {
         return new Promise((resolve, reject) => {
             const script = path.join(this.pythonScriptsPath, '../detect_tiktok_creative_elements.py');
             
-            const process = spawn(this.pythonPath, [
+            // Set GPU environment variables
+            const env = { 
+                ...process.env,
+                RUMIAI_USE_GPU: process.env.RUMIAI_USE_GPU || 'auto',  // Auto-detect GPU by default
+                CUDA_VISIBLE_DEVICES: process.env.CUDA_VISIBLE_DEVICES || '0'  // Use first GPU by default
+            };
+            
+            const ocrProcess = spawn(this.pythonPath, [
                 script,
                 fullVideoId
-            ]);
+            ], { env });
             
             let output = '';
             let errorOutput = '';
@@ -270,19 +277,19 @@ class LocalVideoAnalyzer {
             // Set a 5-minute timeout for OCR (EasyOCR is slow on CPU)
             const timeout = setTimeout(() => {
                 timedOut = true;
-                process.kill('SIGTERM');
+                ocrProcess.kill('SIGTERM');
                 console.log('   ⚠️ OCR timeout after 5 minutes, returning partial results');
             }, 300000); // 5 minutes
             
-            process.stdout.on('data', (data) => {
+            ocrProcess.stdout.on('data', (data) => {
                 output += data.toString();
             });
             
-            process.stderr.on('data', (data) => {
+            ocrProcess.stderr.on('data', (data) => {
                 errorOutput += data.toString();
             });
             
-            process.on('close', async (code) => {
+            ocrProcess.on('close', async (code) => {
                 clearTimeout(timeout);
                 if (code !== 0 || timedOut) {
                     if (!timedOut) {

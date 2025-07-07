@@ -182,6 +182,11 @@ if __name__ == "__main__":
         # Initialize scene labeler
         labeler = SceneLabeler()
         
+        # Check if video file exists first
+        import os
+        if not os.path.exists(video_path):
+            raise FileNotFoundError(f"Video file not found: {video_path}")
+        
         # Sample frames from video
         from frame_sampler import FrameSampler
         frames = FrameSampler.sample_uniform(video_path, target_fps=1.0)

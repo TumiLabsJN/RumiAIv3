@@ -44,6 +44,19 @@ class YOLODeepSortTracker:
         # Initialize YOLO
         self.yolo = YOLO(yolo_model)
         
+        # Check if GPU is available for YOLO
+        try:
+            import torch
+            if torch.cuda.is_available():
+                device_name = torch.cuda.get_device_name(0)
+                vram_gb = torch.cuda.get_device_properties(0).total_memory / 1024**3
+                print(f"🚀 YOLO using GPU: {device_name} ({vram_gb:.1f}GB VRAM)")
+                # YOLO automatically uses GPU if available
+            else:
+                print("📝 YOLO using CPU mode")
+        except ImportError:
+            print("📝 YOLO using available backend")
+        
         # Initialize DeepSort
         self.tracker = DeepSort(max_age=max_age, n_init=n_init)
         
@@ -121,22 +134,49 @@ class YOLODeepSortTracker:
         
         return frame_tracks
     
-    def process_video(self, video_path: str, batch_size: int = 30, frame_skip: int = 0) -> Dict[str, Any]:
+    def process_video(self, video_path: str, batch_size: int = 30, frame_skip: int = -1) -> Dict[str, Any]:
         """
         Process entire video with YOLO + DeepSort
         Args:
             video_path: Path to video file
             batch_size: Process frames in batches for memory efficiency
-            frame_skip: Number of frames to skip (0 = process all, 1 = every other frame, etc.)
+            frame_skip: Number of frames to skip (-1 = adaptive based on duration, 0 = process all, 1 = every other frame, etc.)
         """
+        # Check if video file exists first
+        import os
+        if not os.path.exists(video_path):
+            raise FileNotFoundError(f"Video file not found: {video_path}")
+            
         cap = cv2.VideoCapture(video_path)
         if not cap.isOpened():
             raise ValueError(f"Could not open video: {video_path}")
         
         fps = cap.get(cv2.CAP_PROP_FPS)
         total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        video_duration = total_frames / fps if fps > 0 else 0
         
-        print(f"Processing {total_frames} frames at {fps} fps...")
+        # Adaptive frame skipping based on video duration and extraction FPS
+        if frame_skip == -1:  # Use adaptive mode
+            if video_duration < 30:
+                # Extraction at 5 FPS, we want 2.5 FPS effective
+                # Skip pattern for 30fps video: process 1 in 12 frames (30fps/2.5fps)
+                frame_skip = int(fps / 2.5) - 1
+                effective_fps = fps / (frame_skip + 1)
+                print(f"Adaptive mode: Short video (<30s) - processing every {frame_skip + 1} frames ({effective_fps:.1f} FPS)")
+            elif video_duration < 60:
+                # Extraction at 3 FPS, we want 2 FPS effective  
+                # Skip pattern for 30fps video: process 1 in 15 frames (30fps/2fps)
+                frame_skip = int(fps / 2.0) - 1
+                effective_fps = fps / (frame_skip + 1)
+                print(f"Adaptive mode: Medium video (30-60s) - processing every {frame_skip + 1} frames ({effective_fps:.1f} FPS)")
+            else:
+                # Extraction at 2 FPS, we want 2 FPS effective
+                # Skip pattern for 30fps video: process 1 in 15 frames (30fps/2fps)
+                frame_skip = int(fps / 2.0) - 1
+                effective_fps = fps / (frame_skip + 1)
+                print(f"Adaptive mode: Long video (>60s) - processing every {frame_skip + 1} frames ({effective_fps:.1f} FPS)")
+        
+        print(f"Processing {total_frames} frames at {fps} fps (duration: {video_duration:.1f}s)...")
         
         frame_idx = 0
         processed_frames = 0
@@ -225,8 +265,8 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description='YOLO + DeepSort object tracking')
     parser.add_argument('video_path', help='Path to video file')
-    parser.add_argument('--frame-skip', type=int, default=0, 
-                       help='Number of frames to skip (0=process all, 2=every 3rd frame)')
+    parser.add_argument('--frame-skip', type=int, default=-1, 
+                       help='Number of frames to skip (-1=adaptive based on duration, 0=process all, 2=every 3rd frame)')
     
     args = parser.parse_args()
     

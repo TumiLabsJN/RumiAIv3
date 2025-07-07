@@ -159,6 +159,11 @@ class ContentModerator:
         Moderate entire video by sampling frames
         """
         from frame_sampler import FrameSampler
+        import os
+        
+        # Check if video file exists first
+        if not os.path.exists(video_path):
+            raise FileNotFoundError(f"Video file not found: {video_path}")
         
         # Sample frames
         frames = FrameSampler.sample_uniform(video_path, target_fps=sample_fps)

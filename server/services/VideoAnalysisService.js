@@ -115,7 +115,9 @@ class VideoAnalysisService {
                 message: 'Finalizing results...'
             });
 
-            await this.cleanupLocalFiles(downloadedVideos);
+            // Cleanup disabled - videos needed by parallel processes
+            // Videos should be cleaned up manually or by a separate cleanup job
+            // await this.cleanupLocalFiles(downloadedVideos);
 
             // Final results
             const finalResults = {

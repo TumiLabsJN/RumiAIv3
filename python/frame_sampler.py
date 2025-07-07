@@ -11,6 +11,10 @@ class FrameSampler:
     @staticmethod
     def extract_video_metadata(video_path: str) -> Dict[str, Any]:
         """Extract basic video metadata"""
+        # Check if video file exists first
+        if not os.path.exists(video_path):
+            raise FileNotFoundError(f"Video file not found: {video_path}")
+            
         cap = cv2.VideoCapture(video_path)
         if not cap.isOpened():
             raise ValueError(f"Could not open video: {video_path}")
@@ -59,6 +63,10 @@ class FrameSampler:
             target_fps: Target frames per second (default: adaptive based on duration)
             analysis_type: Type of analysis ('expression_detection', 'mediapipe', 'object_detection', 'general')
         """
+        # Check if video file exists first
+        if not os.path.exists(video_path):
+            raise FileNotFoundError(f"Video file not found: {video_path}")
+            
         cap = cv2.VideoCapture(video_path)
         if not cap.isOpened():
             raise ValueError(f"Could not open video: {video_path}")
@@ -110,6 +118,10 @@ class FrameSampler:
         Generator for all frames - memory efficient
         Used for: YOLO object tracking (needs every frame)
         """
+        # Check if video file exists first
+        if not os.path.exists(video_path):
+            raise FileNotFoundError(f"Video file not found: {video_path}")
+            
         cap = cv2.VideoCapture(video_path)
         if not cap.isOpened():
             raise ValueError(f"Could not open video: {video_path}")
@@ -136,6 +148,10 @@ class FrameSampler:
         """
         Get frames in batches for memory-efficient processing
         """
+        # Check if video file exists first
+        if not os.path.exists(video_path):
+            raise FileNotFoundError(f"Video file not found: {video_path}")
+            
         cap = cv2.VideoCapture(video_path)
         if not cap.isOpened():
             raise ValueError(f"Could not open video: {video_path}")

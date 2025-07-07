@@ -49,45 +49,27 @@ class TikTokCreativeDetector:
                 use_gpu = CUDA_AVAILABLE
                 
             # Initialize with proper GPU detection
-            self.gpu_enabled = False
             if use_gpu and CUDA_AVAILABLE:
                 try:
                     print("🚀 Initializing text detector with GPU acceleration...")
                     # Check available VRAM before initialization
                     if TORCH_AVAILABLE:
-                        device_props = torch.cuda.get_device_properties(0)
-                        vram_gb = device_props.total_memory / 1024**3
+                        vram_gb = torch.cuda.get_device_properties(0).total_memory / 1024**3
                         print(f"   GPU: {torch.cuda.get_device_name(0)} ({vram_gb:.1f}GB VRAM)")
-                        
-                        # Check current VRAM usage
-                        allocated_gb = torch.cuda.memory_allocated() / 1024**3
-                        free_gb = (device_props.total_memory - torch.cuda.memory_allocated()) / 1024**3
-                        print(f"   VRAM: {allocated_gb:.1f}GB used, {free_gb:.1f}GB free")
-                        
-                        # Warn if low on VRAM
-                        if free_gb < 3.0:
-                            print(f"   ⚠️  Low VRAM available ({free_gb:.1f}GB), may need smaller batch size")
                     
                     self.text_reader = easyocr.Reader(['en'], gpu=True)
-                    # Pre-warm the model to avoid first-frame slowdown
-                    dummy_img = np.zeros((100, 100, 3), dtype=np.uint8)
-                    _ = self.text_reader.readtext(dummy_img)
-                    self.gpu_enabled = True
                     print("   ✅ OCR using GPU acceleration")
                 except Exception as e:
                     print(f"   ⚠️ GPU initialization failed: {e}")
                     print("   📝 Falling back to CPU mode...")
                     self.text_reader = easyocr.Reader(['en'], gpu=False)
-                    self.gpu_enabled = False
             else:
                 print("📝 Initializing text detector (CPU mode)...")
                 if gpu_mode == 'auto' and not CUDA_AVAILABLE:
                     print("   ℹ️ No CUDA-capable GPU detected")
                 self.text_reader = easyocr.Reader(['en'], gpu=False)
-                self.gpu_enabled = False
         else:
             self.text_reader = None
-            self.gpu_enabled = False
         
         # TikTok UI regions (right side buttons)
         self.ui_regions = {
@@ -311,65 +293,14 @@ def analyze_video_creative_elements(video_id, input_dir='frame_outputs', output_
         print(f"⚠️  No frames found for {video_id}")
         return
     
-    # Load video metadata to get duration
-    metadata_path = os.path.join(video_frame_dir, 'metadata.json')
-    video_duration = None
-    if os.path.exists(metadata_path):
-        try:
-            with open(metadata_path, 'r') as f:
-                metadata = json.load(f)
-                video_duration = metadata.get('duration', None)
-        except:
-            pass
-    
-    # If no metadata, estimate duration from frame count and typical FPS
-    if video_duration is None:
-        # Estimate based on frame count (assuming adaptive extraction was used)
-        if len(frames) < 150:  # Likely < 30s at 5 FPS
-            video_duration = len(frames) / 5.0
-        elif len(frames) < 180:  # Likely 30-60s at 3 FPS
-            video_duration = len(frames) / 3.0
-        else:  # Likely > 60s at 2 FPS
-            video_duration = len(frames) / 2.0
-    
     print(f"\n🎬 Analyzing creative elements for: {video_id}")
     print(f"   Total frames: {len(frames)}")
-    print(f"   Video duration: {video_duration:.1f}s")
     
-    # Adaptive sampling based on video duration
-    # Maintains ~2 FPS effective analysis rate
-    sampled_frames = []
-    if video_duration < 30:
-        # Videos < 30s: Process every 2nd frame (2.5 FPS effective)
-        print(f"   Strategy: Short video (<30s) - analyzing every 2nd frame")
-        for i in range(0, len(frames), 2):
-            sampled_frames.append(frames[i])
-    elif video_duration < 60:
-        # Videos 30-60s: Process first 2 of every 3 frames (2 FPS effective)
-        print(f"   Strategy: Medium video (30-60s) - analyzing 2 of every 3 frames")
-        for i in range(len(frames)):
-            if i % 3 != 2:  # Skip every 3rd frame
-                sampled_frames.append(frames[i])
-    else:
-        # Videos > 60s: Process every frame (2 FPS effective)
-        print(f"   Strategy: Long video (>60s) - analyzing every frame")
-        sampled_frames = frames
-    
-    print(f"   Analyzing {len(sampled_frames)} frames ({len(sampled_frames)/video_duration:.2f} effective FPS)")
-    
-    # Batch processing configuration for GPU memory management
-    # Adjust batch size based on available VRAM
-    if detector.gpu_enabled and CUDA_AVAILABLE and torch.cuda.is_available():
-        free_vram_gb = (torch.cuda.get_device_properties(0).total_memory - torch.cuda.memory_allocated()) / 1024**3
-        if free_vram_gb < 2.0:
-            BATCH_SIZE = 3  # Conservative for low VRAM
-        elif free_vram_gb < 4.0:
-            BATCH_SIZE = 5  # Medium batch size
-        else:
-            BATCH_SIZE = 10  # Full batch size for 4GB+ free
-        print(f"   Using batch size: {BATCH_SIZE} (based on {free_vram_gb:.1f}GB free VRAM)")
-    else:
-        BATCH_SIZE = 1  # CPU mode - process one at a time
+    # Sample every 15th frame for OCR to reduce processing time
+    # This gives us ~2-3 frames per second which is sufficient for text detection
+    frame_sample_rate = 15
+    sampled_frames = frames[::frame_sample_rate]  # Take every 15th frame
+    print(f"   Analyzing {len(sampled_frames)} frames (every {frame_sample_rate}th frame)")
     
     # Process sampled frames
     all_frame_results = []
@@ -383,60 +314,43 @@ def analyze_video_creative_elements(video_id, input_dir='frame_outputs', output_
     import time
     start_time = time.time()
     
-    # Process frames in batches to manage VRAM
-    for batch_idx in range(0, len(sampled_frames), BATCH_SIZE):
-        batch_frames = sampled_frames[batch_idx:batch_idx + BATCH_SIZE]
-        batch_start_time = time.time()
+    for idx, frame_path in enumerate(sampled_frames):
+        frame_start = time.time()
+        actual_frame_num = idx * frame_sample_rate + 1  # Calculate actual frame number
         
-        for idx, frame_path in enumerate(batch_frames):
-            global_idx = batch_idx + idx
-            frame_start = time.time()
-            
-            # Extract actual frame number from filename (frame_XXXX_tY.YY.jpg)
-            frame_filename = os.path.basename(frame_path)
-            actual_frame_num = int(frame_filename.split('_')[1])
-            
-            # Detect elements
-            frame_results = detector.detect_all_elements(frame_path)
-            frame_results['actual_frame_number'] = actual_frame_num
-            all_frame_results.append(frame_results)
-            
-            # Update timeline with actual frame numbers
-            if frame_results['summary']['has_text']:
-                creative_timeline['text_timeline'].append(actual_frame_num)
-            if frame_results['summary']['has_cta']:
-                creative_timeline['cta_timeline'].append(actual_frame_num)
-            if frame_results['summary']['has_ui']:
-                creative_timeline['ui_timeline'].append(actual_frame_num)
-            if frame_results['summary']['has_creative']:
-                creative_timeline['creative_timeline'].append(actual_frame_num)
-                
-            # Show progress with timing
-            frame_time = time.time() - frame_start
-            elapsed = time.time() - start_time
-            avg_time = elapsed / (global_idx + 1) if global_idx > 0 else frame_time
-            eta = avg_time * (len(sampled_frames) - global_idx - 1)
-            
-            print(f"   Processing frame {global_idx+1}/{len(sampled_frames)} "
-                  f"(frame #{actual_frame_num}) - {frame_time:.1f}s/frame, "
-                  f"ETA: {eta:.0f}s", end='\r')
+        # Detect elements
+        frame_results = detector.detect_all_elements(frame_path)
+        frame_results['actual_frame_number'] = actual_frame_num
+        all_frame_results.append(frame_results)
         
-        # Clear GPU memory between batches if using GPU
-        if CUDA_AVAILABLE and torch.cuda.is_available():
-            torch.cuda.empty_cache()
-            if batch_idx + BATCH_SIZE < len(sampled_frames):
-                print(f"\n   Batch {batch_idx//BATCH_SIZE + 1} complete, clearing GPU memory...")
+        # Update timeline with actual frame numbers
+        if frame_results['summary']['has_text']:
+            creative_timeline['text_timeline'].append(actual_frame_num)
+        if frame_results['summary']['has_cta']:
+            creative_timeline['cta_timeline'].append(actual_frame_num)
+        if frame_results['summary']['has_ui']:
+            creative_timeline['ui_timeline'].append(actual_frame_num)
+        if frame_results['summary']['has_creative']:
+            creative_timeline['creative_timeline'].append(actual_frame_num)
+            
+        # Show progress with timing
+        frame_time = time.time() - frame_start
+        elapsed = time.time() - start_time
+        avg_time = elapsed / (idx + 1)
+        eta = avg_time * (len(sampled_frames) - idx - 1)
+        
+        print(f"   Processing frame {idx+1}/{len(sampled_frames)} "
+              f"(frame #{actual_frame_num}) - {frame_time:.1f}s/frame, "
+              f"ETA: {eta:.0f}s", end='\r')
     
     print(f"\n   ✅ Analysis complete")
     
     # Generate insights
     insights = {
         'video_id': video_id,
-        'video_duration': video_duration,
         'total_frames': len(frames),
         'analyzed_frames': len(sampled_frames),
-        'effective_fps': len(sampled_frames) / video_duration,
-        'sampling_strategy': 'every_2nd' if video_duration < 30 else ('2_of_3' if video_duration < 60 else 'all_frames'),
+        'frame_sample_rate': frame_sample_rate,
         'creative_density': sum(r['summary']['total_elements'] for r in all_frame_results) / len(sampled_frames),
         'text_coverage': len(creative_timeline['text_timeline']) / len(sampled_frames),
         'cta_frames': creative_timeline['cta_timeline'],
@@ -461,12 +375,6 @@ def analyze_video_creative_elements(video_id, input_dir='frame_outputs', output_
     print(f"      - Frames with text: {len(creative_timeline['text_timeline'])}/{len(frames)}")
     print(f"      - CTA frames: {len(creative_timeline['cta_timeline'])}")
     print(f"      - UI persistence: {'Yes' if insights['has_persistent_ui'] else 'No'}")
-    
-    # Performance summary
-    total_time = time.time() - start_time
-    fps_achieved = len(sampled_frames) / total_time
-    mode = "GPU" if detector.gpu_enabled else "CPU"
-    print(f"\n   ⚡ Performance: {fps_achieved:.1f} frames/sec ({mode} mode, {total_time:.1f}s total)")
     
     return insights
 

@@ -430,6 +430,9 @@ async function runCompleteFlow() {
         console.log(`      cat insights/${videoId}/reports/analysis_report_*.json | jq`);
         console.log(`   2. View specific prompt results:`);
         console.log(`      ls insights/${videoId}/*/`);
+        console.log(`   3. To cleanup video file, run:`);
+        console.log(`      rm temp/${videoId}_1.mp4`);
+        console.log(`      # Or set CLEANUP_VIDEO=true when running`);
         console.log('');
 
         // Clean up - remove local video file if needed
