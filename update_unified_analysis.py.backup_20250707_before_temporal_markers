@@ -8,14 +8,6 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
-# Import temporal marker integration
-try:
-    from python.temporal_marker_integration import TemporalMarkerPipeline
-    TEMPORAL_MARKERS_AVAILABLE = True
-except ImportError:
-    TEMPORAL_MARKERS_AVAILABLE = False
-    print("⚠️  Temporal markers module not available")
-
 
 def update_unified_analysis(video_id):
     """Update unified analysis with all available data sources"""
@@ -136,37 +128,16 @@ def update_unified_analysis(video_id):
         
         print("   ✅ Updated with enhanced human analysis")
     
-    # 5. Extract temporal markers if available
-    if TEMPORAL_MARKERS_AVAILABLE:
-        try:
-            print("   🎯 Extracting temporal markers...")
-            pipeline = TemporalMarkerPipeline(video_id, base_dir='.')
-            temporal_markers = pipeline.extract_all_markers()
-            
-            if temporal_markers:
-                unified['temporal_markers'] = temporal_markers
-                
-                # Add summary to insights
-                summary = pipeline.get_marker_summary(temporal_markers)
-                print(f"      - First 5s density: {summary['first_5_seconds']['density_avg']:.1f}")
-                print(f"      - CTA appearances: {summary['cta_window']['cta_count']}")
-                print(f"      - Marker size: {summary['size_kb']:.1f}KB")
-                
-                print("   ✅ Updated with temporal markers")
-        except Exception as e:
-            print(f"   ⚠️  Temporal marker extraction failed: {e}")
-    
-    # 6. Calculate insights (including temporal marker insights)
+    # 5. Calculate insights
     unified['insights'] = calculate_insights(unified)
     
-    # 7. Update metadata
+    # 6. Update metadata
     unified['last_updated'] = datetime.now().isoformat()
     unified['data_sources'] = {
         'tiktok_metadata': bool(unified.get('static_metadata', {}).get('author')),
         'local_analysis': 'local_analysis' in unified,
         'scene_detection': 'scene_detection' in unified,
-        'enhanced_analysis': 'enhanced_analysis' in unified,
-        'temporal_markers': 'temporal_markers' in unified
+        'enhanced_analysis': 'enhanced_analysis' in unified
     }
     
     # Save updated unified analysis
@@ -294,38 +265,6 @@ def calculate_insights(unified):
         engagement_indicators.append('high_creative_density')
     
     insights['engagementIndicators'] = engagement_indicators
-    
-    # Add temporal marker insights if available
-    if 'temporal_markers' in unified:
-        tm = unified['temporal_markers']
-        first_5 = tm.get('first_5_seconds', {})
-        cta = tm.get('cta_window', {})
-        
-        insights['temporal_patterns'] = {
-            'first_5_seconds': {
-                'avg_density': sum(first_5.get('density_progression', [])) / 5,
-                'has_early_cta': any(t.get('is_cta', False) for t in first_5.get('text_moments', [])),
-                'emotion_changes': len(set(first_5.get('emotion_sequence', []))) - 1,
-                'gesture_count': len(first_5.get('gesture_moments', []))
-            },
-            'cta_window': {
-                'cta_count': len(cta.get('cta_appearances', [])),
-                'has_gesture_sync': len(cta.get('gesture_sync', [])) > 0,
-                'object_focus': [obj['object'] for obj in cta.get('object_focus', [])][:3]
-            }
-        }
-        
-        # Add to engagement indicators based on temporal patterns
-        if insights['temporal_patterns']['first_5_seconds']['avg_density'] > 3:
-            engagement_indicators.append('high_first_5s_density')
-        
-        if insights['temporal_patterns']['first_5_seconds']['has_early_cta']:
-            engagement_indicators.append('early_cta')
-            
-        if insights['temporal_patterns']['cta_window']['has_gesture_sync']:
-            engagement_indicators.append('cta_gesture_sync')
-            
-        insights['engagementIndicators'] = engagement_indicators
     
     return insights
 

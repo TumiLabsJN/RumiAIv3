@@ -17,6 +17,21 @@ try:
 except ImportError:
     pass
 
+# Try to import temporal marker integration
+try:
+    from python.claude_temporal_integration import ClaudeTemporalIntegration
+    from python.temporal_marker_integration import extract_temporal_markers
+    TEMPORAL_MARKERS_AVAILABLE = True
+except ImportError:
+    TEMPORAL_MARKERS_AVAILABLE = False
+
+# Try to import monitoring
+try:
+    from python.temporal_monitoring import record_claude_request
+    MONITORING_AVAILABLE = True
+except ImportError:
+    MONITORING_AVAILABLE = False
+
 class ClaudeInsightRunner:
     def __init__(self):
         self.api_key = os.getenv('ANTHROPIC_API_KEY')
@@ -35,6 +50,30 @@ class ClaudeInsightRunner:
             'scene_pacing': 60,
             'default': 120
         }
+        
+        # Initialize temporal marker integration
+        self.temporal_integration = None
+        self._init_temporal_integration()
+    
+    def _init_temporal_integration(self):
+        """Initialize temporal marker integration with config"""
+        if not TEMPORAL_MARKERS_AVAILABLE:
+            print("⚠️  Temporal markers not available - running without temporal integration")
+            return
+        
+        # Load config from environment or use defaults
+        config_path = os.getenv('TEMPORAL_MARKERS_CONFIG', 'config/temporal_markers.json')
+        enable = os.getenv('ENABLE_TEMPORAL_MARKERS', 'true').lower() == 'true'
+        rollout_pct = float(os.getenv('TEMPORAL_ROLLOUT_PERCENTAGE', '100'))
+        
+        self.temporal_integration = ClaudeTemporalIntegration(
+            enable_temporal_markers=enable,
+            rollout_percentage=rollout_pct,
+            config_path=config_path if os.path.exists(config_path) else None
+        )
+        
+        if enable:
+            print(f"✅ Temporal markers enabled (rollout: {rollout_pct}%)")
         
     def run_claude_prompt(self, video_id, prompt_name, prompt_text, context_data=None):
         """
@@ -56,7 +95,7 @@ class ClaudeInsightRunner:
         os.makedirs(output_dir, exist_ok=True)
         
         # Build full prompt with context
-        full_prompt = self._build_full_prompt(prompt_text, context_data)
+        full_prompt = self._build_full_prompt(prompt_text, context_data, video_id)
         
         # Save prompt
         prompt_file = os.path.join(output_dir, f'{prompt_name}_prompt_{timestamp}.txt')
@@ -67,6 +106,21 @@ class ClaudeInsightRunner:
         # Calculate dynamic timeout based on data size
         timeout = self._calculate_dynamic_timeout(prompt_name, context_data)
         claude_response = self._call_claude_api(full_prompt, timeout=timeout)
+        
+        # Record monitoring data if available
+        if MONITORING_AVAILABLE and hasattr(self, '_last_prompt_info'):
+            try:
+                record_claude_request(
+                    video_id=video_id,
+                    prompt_name=prompt_name,
+                    has_temporal_markers=self._last_prompt_info['has_temporal_markers'],
+                    rollout_decision=self._last_prompt_info['rollout_decision'],
+                    prompt_size_kb=self._last_prompt_info['prompt_size_kb'],
+                    success=claude_response['success'],
+                    error=claude_response.get('error') if not claude_response['success'] else None
+                )
+            except Exception as e:
+                print(f"Failed to record monitoring data: {e}")
         
         # Save response
         if claude_response['success']:
@@ -117,16 +171,73 @@ class ClaudeInsightRunner:
                 'error_file': error_file
             }
     
-    def _build_full_prompt(self, prompt_text, context_data):
-        """Build the full prompt with context"""
+    def _build_full_prompt(self, prompt_text, context_data, video_id=None):
+        """Build the full prompt with context and temporal markers"""
         if not context_data:
             return prompt_text
         
-        # Format context as structured data
-        context_str = "CONTEXT DATA:\n"
-        context_str += json.dumps(context_data, indent=2)
+        has_temporal_markers = False
+        rollout_decision = 'no_integration'
+        
+        # Check if we should add temporal markers
+        if self.temporal_integration and video_id and TEMPORAL_MARKERS_AVAILABLE:
+            try:
+                # Extract temporal markers for this video
+                temporal_markers = extract_temporal_markers(video_id)
+                
+                if temporal_markers:
+                    # Check if this video should get temporal markers
+                    if self.temporal_integration.should_include_temporal_markers(video_id):
+                        # Use temporal integration to build context
+                        context_str = self.temporal_integration.build_context_with_temporal_markers(
+                            existing_context=context_data,
+                            temporal_markers=temporal_markers,
+                            video_id=video_id
+                        )
+                        has_temporal_markers = True
+                        rollout_decision = 'included'
+                        
+                        # Check size and warn if needed
+                        size_info = self.temporal_integration.get_prompt_size_estimate(
+                            context_str, prompt_text
+                        )
+                        
+                        if size_info['warnings']:
+                            for warning in size_info['warnings']:
+                                print(f"⚠️  {warning}")
+                        
+                        print(f"📊 Including temporal markers ({size_info['size_kb']:.1f}KB total)")
+                    else:
+                        # Rollout decision: not included
+                        context_str = "CONTEXT DATA:\n"
+                        context_str += json.dumps(context_data, indent=2)
+                        rollout_decision = 'rollout_excluded'
+                else:
+                    # No temporal markers found, use regular context
+                    context_str = "CONTEXT DATA:\n"
+                    context_str += json.dumps(context_data, indent=2)
+                    rollout_decision = 'no_markers_found'
+                    
+            except Exception as e:
+                print(f"⚠️  Failed to add temporal markers: {e}")
+                # Fall back to regular context
+                context_str = "CONTEXT DATA:\n"
+                context_str += json.dumps(context_data, indent=2)
+                rollout_decision = 'extraction_error'
+        else:
+            # Regular context formatting
+            context_str = "CONTEXT DATA:\n"
+            context_str += json.dumps(context_data, indent=2)
         
         full_prompt = f"{context_str}\n\nANALYSIS REQUEST:\n{prompt_text}"
+        
+        # Store monitoring info for later use
+        self._last_prompt_info = {
+            'has_temporal_markers': has_temporal_markers,
+            'rollout_decision': rollout_decision,
+            'prompt_size_kb': len(full_prompt) / 1024
+        }
+        
         return full_prompt
     
     def _calculate_dynamic_timeout(self, prompt_name, context_data):

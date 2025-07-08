@@ -4276,6 +4276,11 @@ def main():
         prompt_time = time.time() - prompt_start
         prompt_times.append(prompt_time)
         print(f"⏱️  {prompt_name} completed in {prompt_time:.1f}s")
+        
+        # Add 10-second delay between prompts to avoid rate limiting
+        if i < len(prompts):  # Don't delay after the last prompt
+            print(f"⏳ Waiting 10s before next prompt to avoid rate limiting...")
+            time.sleep(10)
     
     # Final summary
     total_time = time.time() - start_time

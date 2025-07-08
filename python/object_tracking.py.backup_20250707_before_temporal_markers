@@ -21,14 +21,6 @@ except ImportError:
     print("Warning: deep-sort-realtime not installed")
     DEEPSORT_AVAILABLE = False
 
-# Import temporal marker extractor
-try:
-    from python.temporal_marker_extractors import YOLOTemporalExtractor
-    TEMPORAL_MARKERS_AVAILABLE = True
-except ImportError:
-    TEMPORAL_MARKERS_AVAILABLE = False
-    print("⚠️  Temporal markers module not available")
-
 class YOLODeepSortTracker:
     """
     Enhanced YOLO object detection with DeepSort tracking
@@ -266,43 +258,6 @@ class YOLODeepSortTracker:
         }
         
         return summary
-    
-    def extract_temporal_markers(self, video_metadata: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Extract temporal markers from tracked objects
-        Args:
-            video_metadata: Dict with fps, extraction_fps, duration
-        Returns:
-            Temporal markers dictionary
-        """
-        if not TEMPORAL_MARKERS_AVAILABLE:
-            print("⚠️  Temporal marker extraction not available")
-            return {}
-            
-        # Convert tracked objects to format expected by extractor
-        tracks = []
-        for track_id, track_data in self.tracked_objects.items():
-            if track_data['class'] and len(track_data['frames']) > 0:
-                detections = []
-                for frame_info in track_data['frames']:
-                    detections.append({
-                        'frame': frame_info['frame'],
-                        'class': track_data['class'],
-                        'confidence': frame_info.get('confidence', 0.9)
-                    })
-                
-                tracks.append({
-                    'track_id': track_id,
-                    'detections': detections
-                })
-        
-        tracking_data = {'tracks': tracks}
-        
-        # Extract temporal markers
-        extractor = YOLOTemporalExtractor(video_metadata)
-        temporal_markers = extractor.extract_temporal_markers(tracking_data)
-        
-        return temporal_markers
 
 
 if __name__ == "__main__":
@@ -325,26 +280,6 @@ if __name__ == "__main__":
         # Get summary
         summary = tracker.get_object_summary()
         
-        # Extract temporal markers if available
-        temporal_markers = None
-        if TEMPORAL_MARKERS_AVAILABLE:
-            video_metadata = {
-                'fps': result['fps'],
-                'extraction_fps': result['fps'] / (args.frame_skip + 1) if args.frame_skip > 0 else result['fps'],
-                'duration': result['total_frames'] / result['fps'],
-                'frame_count': result['total_frames']
-            }
-            
-            print("\n🎯 Extracting temporal markers...")
-            temporal_markers = tracker.extract_temporal_markers(video_metadata)
-            
-            if temporal_markers:
-                first_5 = temporal_markers.get('first_5_seconds', {})
-                cta = temporal_markers.get('cta_window', {})
-                print(f"   - Object appearances (0-5s): {len(first_5.get('object_appearances', []))}")
-                print(f"   - Density progression: {first_5.get('density_progression', [])}")
-                print(f"   - Object focus in CTA: {len(cta.get('object_focus', []))}")
-        
         # Output results
         print(f"\nTracking Results:")
         print(f"Total tracks: {result['total_tracks']}")
@@ -352,12 +287,8 @@ if __name__ == "__main__":
         if args.frame_skip > 0:
             print(f"Frame sampling: every {args.frame_skip + 1} frames")
         
-        # Save results with temporal markers
-        output_data = result
-        if temporal_markers:
-            output_data['temporal_markers'] = temporal_markers
-            
+        # Save results
         output_path = args.video_path.replace('.mp4', '_tracking.json')
         with open(output_path, 'w') as f:
-            json.dump(output_data, f, indent=2)
+            json.dump(result, f, indent=2)
         print(f"Results saved to {output_path}")

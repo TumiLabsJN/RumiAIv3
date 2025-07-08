@@ -1,0 +1,181 @@
+<h1 id="enhanced-temporal-markers---quick-reference">Enhanced Temporal
+Markers - Quick Reference</h1>
+<h2 id="core-system-flow">🎯 Core System Flow</h2>
+<pre><code>Video Analysis Pipeline
+         ↓
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│ OCR Analyzer    │     │ YOLO Tracker    │     │ MediaPipe       │
+│ (modified)      │     │ (modified)      │     │ (modified)      │
+└────────┬────────┘     └────────┬────────┘     └────────┬────────┘
+         ↓                       ↓                       ↓
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│ OCRTemporal     │     │ YOLOTemporal    │     │ MediaPipeTemporal│
+│ Extractor       │     │ Extractor       │     │ Extractor       │
+└────────┬────────┘     └────────┬────────┘     └────────┬────────┘
+         └───────────────────────┴───────────────────────┘
+                                 ↓
+                    ┌────────────────────────┐
+                    │ TemporalMarker         │
+                    │ Integrator             │
+                    └──────────┬─────────────┘
+                               ↓
+                    ┌────────────────────────┐
+                    │ TemporalMarker         │
+                    │ Safety                 │
+                    └──────────┬─────────────┘
+                               ↓
+                    ┌────────────────────────┐
+                    │ Claude Temporal        │
+                    │ Integration            │
+                    └──────────┬─────────────┘
+                               ↓
+                         Claude API</code></pre>
+<h2 id="key-files-quick-reference">📁 Key Files Quick Reference</h2>
+<h3 id="core-modules">Core Modules</h3>
+<ul>
+<li><strong><code>python/timestamp_normalizer.py</code></strong> -
+Converts all timestamps to seconds</li>
+<li><strong><code>python/temporal_marker_safety.py</code></strong> -
+Size limits and validation</li>
+<li><strong><code>python/temporal_marker_extractors.py</code></strong> -
+Analyzer-specific extractors</li>
+<li><strong><code>python/temporal_marker_integration.py</code></strong>
+- Main pipeline</li>
+</ul>
+<h3 id="integration-points">Integration Points</h3>
+<ul>
+<li><strong><code>run_claude_insight.py</code></strong> - Modified to
+include temporal markers</li>
+<li><strong><code>update_unified_analysis.py</code></strong> - Modified
+to extract markers</li>
+<li><strong><code>detect_tiktok_creative_elements.py</code></strong> -
+OCR analyzer (modified)</li>
+<li><strong><code>python/object_tracking.py</code></strong> - YOLO
+analyzer (modified)</li>
+<li><strong><code>python/enhanced_human_analyzer.py</code></strong> -
+MediaPipe analyzer (modified)</li>
+</ul>
+<h3 id="monitoring-control">Monitoring &amp; Control</h3>
+<ul>
+<li><strong><code>python/temporal_monitoring.py</code></strong> -
+Metrics tracking</li>
+<li><strong><code>temporal_monitoring_dashboard.py</code></strong> -
+View metrics</li>
+<li><strong><code>temporal_rollout_controller.py</code></strong> -
+Control deployment</li>
+</ul>
+<h3 id="prompts-training">Prompts &amp; Training</h3>
+<ul>
+<li><strong><code>prompts/temporal_aware_prompts.py</code></strong> -
+New prompt library</li>
+<li><strong><code>temporal_training_workshop.py</code></strong> -
+Interactive training</li>
+</ul>
+<h2 id="quick-start-commands">🚀 Quick Start Commands</h2>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Check if temporal markers are working</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> demo_temporal_markers.py <span class="op">&lt;</span>video_id<span class="op">&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Compare Claude analysis with/without markers</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> demo_claude_temporal.py <span class="op">&lt;</span>video_id<span class="op">&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Enable temporal markers (0% rollout)</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> temporal_rollout_controller.py enable</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Start 10% rollout</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> temporal_rollout_controller.py phase 1</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Monitor health</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> temporal_monitoring_dashboard.py</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Run training workshop</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> temporal_training_workshop.py</span></code></pre></div>
+<h2 id="data-structure">📊 Data Structure</h2>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>temporal_markers <span class="op">=</span> {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;first_5_seconds&quot;</span>: {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;density_progression&quot;</span>: [<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">2</span>],  <span class="co"># Events per second</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;text_moments&quot;</span>: [...],                    <span class="co"># Text with timestamps</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;emotion_sequence&quot;</span>: [...],                <span class="co"># Emotion changes</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;gesture_moments&quot;</span>: [...],                 <span class="co"># Gestures detected</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;object_appearances&quot;</span>: [...]               <span class="co"># Objects seen</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;cta_window&quot;</span>: {</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;time_range&quot;</span>: <span class="st">&quot;51.0-60.0s&quot;</span>,              <span class="co"># Last 15% of video</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;cta_appearances&quot;</span>: [...],                 <span class="co"># CTAs detected</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;gesture_sync&quot;</span>: [...],                    <span class="co"># Gesture alignment</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;object_focus&quot;</span>: [...]                     <span class="co"># What&#39;s in focus</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h2 id="configuration">⚙️ Configuration</h2>
+<p>Location: <code>config/temporal_markers.json</code></p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;enable_temporal_markers&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;rollout_percentage&quot;</span><span class="fu">:</span> <span class="fl">10.0</span><span class="fu">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;format_options&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;include_density&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;include_emotions&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;include_gestures&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;include_objects&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;include_cta&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;compact_mode&quot;</span><span class="fu">:</span> <span class="kw">false</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h2 id="testing">🧪 Testing</h2>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run all temporal marker tests</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> venv/bin/activate</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pytest tests/test_<span class="pp">*</span>temporal<span class="pp">*</span>.py tests/test_marker<span class="pp">*</span>.py <span class="at">-v</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Test specific component</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pytest tests/test_temporal_monitoring.py <span class="at">-v</span></span></code></pre></div>
+<h2 id="debugging">🔍 Debugging</h2>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if markers are being extracted</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> python.temporal_marker_integration <span class="im">import</span> extract_temporal_markers</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>markers <span class="op">=</span> extract_temporal_markers(<span class="st">&#39;video_id_123&#39;</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(json.dumps(markers, indent<span class="op">=</span><span class="dv">2</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Check monitoring metrics</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> python.temporal_monitoring <span class="im">import</span> generate_metrics_report</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(generate_metrics_report())</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Check rollout status</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>python temporal_rollout_controller.py status</span></code></pre></div>
+<h2 id="key-metrics-to-monitor">📈 Key Metrics to Monitor</h2>
+<ol type="1">
+<li><strong>Extraction Success Rate</strong> - Should be &gt;90%</li>
+<li><strong>Average Marker Size</strong> - Should be &lt;100KB</li>
+<li><strong>Processing Time</strong> - Should be &lt;5s</li>
+<li><strong>API Error Rate</strong> - Should be &lt;5%</li>
+<li><strong>Quality Improvement</strong> - Should show +2 or higher</li>
+</ol>
+<h2 id="common-issues">🚨 Common Issues</h2>
+<ol type="1">
+<li><strong>No temporal markers in Claude response</strong>
+<ul>
+<li>Check rollout percentage</li>
+<li>Verify ENABLE_TEMPORAL_MARKERS=true</li>
+<li>Check if video has analyzer outputs</li>
+</ul></li>
+<li><strong>Large marker sizes</strong>
+<ul>
+<li>Enable compact_mode in config</li>
+<li>Check for videos with excessive events</li>
+</ul></li>
+<li><strong>Extraction failures</strong>
+<ul>
+<li>Verify analyzer output files exist</li>
+<li>Check file paths in integration module</li>
+</ul></li>
+</ol>
+<h2 id="pro-tips">💡 Pro Tips</h2>
+<ol type="1">
+<li>Always run monitoring dashboard before increasing rollout</li>
+<li>Test prompts with <code>compare_prompts_demo.py</code> first</li>
+<li>Use training workshop for team onboarding</li>
+<li>Start with high-impact prompts (hook_analysis,
+cta_effectiveness)</li>
+<li>Monitor quality scores to validate improvements</li>
+</ol>

@@ -15,14 +15,6 @@ from datetime import datetime
 import glob
 from collections import Counter, defaultdict
 
-# Import temporal marker extractor
-try:
-    from python.temporal_marker_extractors import MediaPipeTemporalExtractor
-    TEMPORAL_MARKERS_AVAILABLE = True
-except ImportError:
-    TEMPORAL_MARKERS_AVAILABLE = False
-    print("⚠️  Temporal markers module not available")
-
 
 class NumpyEncoder(json.JSONEncoder):
     """Custom JSON encoder for NumPy types"""
@@ -472,21 +464,6 @@ class EnhancedHumanAnalyzer:
         # Generate summary
         all_results['summary'] = self._generate_summary(all_results['frame_analyses'])
         
-        # Extract temporal markers if available
-        if TEMPORAL_MARKERS_AVAILABLE:
-            print("🎯 Extracting temporal markers...")
-            temporal_markers = self.extract_temporal_markers(all_results)
-            
-            if temporal_markers:
-                all_results['temporal_markers'] = temporal_markers
-                
-                # Print summary
-                first_5 = temporal_markers.get('first_5_seconds', {})
-                cta = temporal_markers.get('cta_window', {})
-                print(f"   - Emotion sequence (0-5s): {first_5.get('emotion_sequence', [])}")
-                print(f"   - Gesture moments: {len(first_5.get('gesture_moments', []))}")
-                print(f"   - Gesture sync in CTA: {len(cta.get('gesture_sync', []))}")
-        
         # Save results
         output_path = os.path.join(output_dir, f'{video_id}_enhanced_human_analysis.json')
         with open(output_path, 'w') as f:
@@ -561,92 +538,6 @@ class EnhancedHumanAnalyzer:
             'change_frequency': len(background_changes),
             'avg_change_magnitude': float(np.mean(change_magnitudes)) if change_magnitudes else 0
         }
-    
-    def extract_temporal_markers(self, all_results):
-        """Extract temporal markers from analysis results"""
-        if not TEMPORAL_MARKERS_AVAILABLE:
-            print("⚠️  Temporal marker extraction not available")
-            return {}
-        
-        # Get video metadata from frames
-        frame_analyses = all_results.get('frame_analyses', [])
-        if not frame_analyses:
-            return {}
-            
-        # Estimate video duration from last frame timestamp
-        last_timestamp = max(f['timestamp'] for f in frame_analyses)
-        first_timestamp = min(f['timestamp'] for f in frame_analyses)
-        duration = last_timestamp - first_timestamp
-        
-        # Estimate FPS from frame intervals
-        timestamps = sorted([f['timestamp'] for f in frame_analyses])
-        intervals = [timestamps[i+1] - timestamps[i] for i in range(len(timestamps)-1)]
-        avg_interval = np.mean(intervals) if intervals else 1.0
-        extraction_fps = 1.0 / avg_interval if avg_interval > 0 else 2.0
-        
-        video_metadata = {
-            'fps': 30.0,  # Assume standard TikTok fps
-            'extraction_fps': extraction_fps,
-            'duration': duration,
-            'frame_count': len(frame_analyses)
-        }
-        
-        # Convert to format expected by extractor
-        timeline_data = {
-            'timeline': {
-                'expressions': [],
-                'gestures': []
-            }
-        }
-        
-        # Extract expressions and gestures from each frame
-        for frame in frame_analyses:
-            frame_idx = frame['frame']
-            
-            # Extract expression from face data
-            if 'faces' in frame and frame['faces']:
-                primary_face = frame['faces'][0]
-                expression = primary_face.get('expression', 'neutral')
-                timeline_data['timeline']['expressions'].append({
-                    'frame': frame_idx,
-                    'expression': expression
-                })
-            
-            # Extract gesture from action recognition
-            if 'action_recognition' in frame:
-                primary_action = frame['action_recognition'].get('primary_action', 'unknown')
-                
-                # Map actions to gestures
-                gesture_map = {
-                    'pointing': 'pointing',
-                    'dancing': 'wave',  # Simplified mapping
-                    'talking': 'unknown',
-                    'walking': 'unknown',
-                    'sitting': 'unknown'
-                }
-                
-                gesture = gesture_map.get(primary_action, 'unknown')
-                if gesture != 'unknown':
-                    timeline_data['timeline']['gestures'].append({
-                        'frame': frame_idx,
-                        'gesture': gesture,
-                        'confidence': frame['action_recognition'].get('action_confidence', 0.8)
-                    })
-                
-                # Also check for hand gestures
-                if 'hands' in frame and frame['hands']:
-                    # Simplified hand gesture detection
-                    timeline_data['timeline']['gestures'].append({
-                        'frame': frame_idx,
-                        'gesture': 'open_hand',
-                        'confidence': 0.9
-                    })
-        
-        # Extract temporal markers
-        extractor = MediaPipeTemporalExtractor(video_metadata)
-        temporal_markers = extractor.extract_temporal_markers(timeline_data)
-        
-        return temporal_markers
     
     def _generate_summary(self, frame_analyses):
         """Generate summary statistics"""
