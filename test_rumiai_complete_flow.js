@@ -299,7 +299,9 @@ async function runCompleteFlow() {
             await new Promise((resolve, reject) => {
                 const pythonProcess = spawn('bash', ['-c', `source venv/bin/activate && python ${promptScript} ${videoId}`], {
                     env: process.env,
-                    cwd: __dirname
+                    cwd: __dirname,
+                    // Increase buffer size to prevent overflow
+                    maxBuffer: 10 * 1024 * 1024  // 10MB buffer
                 });
                 
                 // Set timeout
@@ -320,7 +322,12 @@ async function runCompleteFlow() {
                 });
                 
                 pythonProcess.stderr.on('data', (data) => {
-                    promptErrors += data.toString();
+                    const errorOutput = data.toString();
+                    promptErrors += errorOutput;
+                    // Also print errors to console for debugging
+                    if (errorOutput.includes('ERROR') || errorOutput.includes('Traceback')) {
+                        console.error('\n🔴 Python Error:', errorOutput);
+                    }
                 });
                 
                 pythonProcess.on('close', (code) => {

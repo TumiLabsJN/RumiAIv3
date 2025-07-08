@@ -85,13 +85,17 @@ class UnifiedTimelineAssembler {
                 // Derived insights
                 insights: insights,
                 
+                // Temporal markers (if available)
+                temporal_markers: pipelineData.temporalMarkers || null,
+                
                 // Pipeline status
                 pipeline_status: {
                     yolo: pipelineData.yolo !== null,
                     mediapipe: pipelineData.mediapipe !== null,
                     ocr: pipelineData.ocr !== null,
                     audio: pipelineData.audio !== null,
-                    metadata: Object.keys(metadataSummary).length > 0
+                    metadata: Object.keys(metadataSummary).length > 0,
+                    temporalMarkers: pipelineData.temporalMarkers !== null
                 }
             };
             
@@ -145,10 +149,13 @@ class UnifiedTimelineAssembler {
             // Add local scene detection output with multiple format support
             scenes: await this.loadJsonFile(`scene_detection_outputs/${fullVideoId}/${fullVideoId}_scenes.json`) ||
                     await this.loadJsonFile(`scene_detection_outputs/${videoId}/${videoId}_scenes.json`) ||
-                    await this.loadJsonFile(`scene_detection_outputs/${videoId}_1/${videoId}_1_scenes.json`)
+                    await this.loadJsonFile(`scene_detection_outputs/${videoId}_1/${videoId}_1_scenes.json`),
+            // Add temporal markers
+            temporalMarkers: await this.loadJsonFile(`temporal_markers/${videoId}.json`) ||
+                            await this.loadJsonFile(`temporal_markers/${fullVideoId}.json`)
         };
         
-        console.log(`📊 Loaded pipeline outputs - YOLO: ${!!outputs.yolo}, MediaPipe: ${!!outputs.mediapipe}, OCR: ${!!outputs.ocr}, Scene: ${!!outputs.scenes}, Whisper: ${!!outputs.whisper}`);
+        console.log(`📊 Loaded pipeline outputs - YOLO: ${!!outputs.yolo}, MediaPipe: ${!!outputs.mediapipe}, OCR: ${!!outputs.ocr}, Scene: ${!!outputs.scenes}, Whisper: ${!!outputs.whisper}, Temporal: ${!!outputs.temporalMarkers}`);
         
         return outputs;
     }

@@ -71,3 +71,7 @@ Before every `git push`, Claude must verify:
 
 ## 🧠 Mental Model:
 Claude is a **one-way postman**. It delivers code to GitHub but cannot open packages or pull anything from the shelf unless told to.
+
+Do not provide solutions that don't fix the real cause of the problem. 
+If the flow is supposed to be automatic, do not provide solutions that require manual intervention.
+All results and analysis have to be real based on data and analysis

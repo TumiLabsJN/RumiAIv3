@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const TimelineSynchronizer = require('./TimelineSynchronizer');
 const WhisperTranscriptionService = require('./WhisperTranscriptionService');
+const TemporalMarkerService = require('./TemporalMarkerService');
 
 class LocalVideoAnalyzer {
     constructor() {
@@ -656,6 +657,53 @@ class LocalVideoAnalyzer {
             
             console.log('\n✅ All local analyses complete!\n');
             
+            // 4. Generate temporal markers AFTER all analyses complete
+            let temporalMarkers = null;
+            try {
+                console.log('🎯 Generating temporal markers...');
+                
+                // Prepare dependencies with output paths
+                const dependencies = {
+                    yolo: { 
+                        data: yolo, 
+                        outputPath: path.join(__dirname, '../../object_detection_outputs', fullVideoId, `${fullVideoId}_yolo_detections.json`)
+                    },
+                    mediapipe: { 
+                        data: mediapipe,
+                        outputPath: path.join(__dirname, '../../human_analysis_outputs', fullVideoId, `${fullVideoId}_human_analysis.json`)
+                    },
+                    ocr: { 
+                        data: ocr,
+                        outputPath: path.join(__dirname, '../../creative_analysis_outputs', fullVideoId, `${fullVideoId}_creative_analysis.json`)
+                    },
+                    enhancedHuman: { 
+                        data: enhancedHuman,
+                        outputPath: path.join(__dirname, '../../enhanced_human_analysis_outputs', videoId, `${videoId}_enhanced_human_analysis.json`)
+                    },
+                    scenes: { 
+                        data: scenes,
+                        outputPath: path.join(__dirname, '../../scene_detection_outputs', fullVideoId, `${fullVideoId}_scenes.json`)
+                    }
+                };
+                
+                const temporalResult = await TemporalMarkerService.generateTemporalMarkers(
+                    videoPath, 
+                    videoId, 
+                    metadata,
+                    dependencies
+                );
+                
+                if (temporalResult && temporalResult.success) {
+                    temporalMarkers = temporalResult.data;
+                    console.log(`   ✅ Temporal markers generated (${temporalResult.metrics.markerCount} markers)`);
+                } else {
+                    console.log('   ⚠️ Temporal markers not generated (skipped or failed)');
+                }
+            } catch (error) {
+                console.error('   ❌ Temporal marker generation error:', error.message);
+                // Continue without temporal markers
+            }
+            
             return {
                 // Speech from Whisper
                 speechTranscriptions: whisper.speechTranscriptions || [],
@@ -683,6 +731,9 @@ class LocalVideoAnalyzer {
                 
                 // Enhanced Human Analysis (new)
                 enhancedHumanAnalysis: enhancedHuman.summary || {},
+                
+                // Temporal Markers (new)
+                temporalMarkers: temporalMarkers,
                 
                 // Metadata
                 metadata: metadata,

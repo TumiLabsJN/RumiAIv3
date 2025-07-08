@@ -384,6 +384,7 @@ class TemporalMarkerPipeline:
 def extract_temporal_markers(video_id: str, base_dir: str = '.') -> Dict[str, Any]:
     """
     Convenience function to extract temporal markers for a video.
+    First checks if temporal markers already exist in unified timeline.
     
     Args:
         video_id: Video identifier
@@ -392,6 +393,22 @@ def extract_temporal_markers(video_id: str, base_dir: str = '.') -> Dict[str, An
     Returns:
         Integrated temporal markers
     """
+    # First check if temporal markers already exist in unified timeline
+    unified_path = Path(base_dir) / 'unified_analysis' / f'{video_id}.json'
+    if unified_path.exists():
+        try:
+            with open(unified_path, 'r') as f:
+                unified_data = json.load(f)
+            
+            # Check if temporal markers are already in the unified timeline
+            if unified_data.get('temporal_markers'):
+                logger.info(f"Using pre-generated temporal markers from unified timeline for {video_id}")
+                return unified_data['temporal_markers']
+        except Exception as e:
+            logger.warning(f"Failed to load temporal markers from unified timeline: {e}")
+    
+    # Fall back to on-the-fly generation
+    logger.info(f"Generating temporal markers on-the-fly for {video_id}")
     pipeline = TemporalMarkerPipeline(video_id, base_dir)
     return pipeline.extract_all_markers()
 

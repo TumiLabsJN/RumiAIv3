@@ -4206,22 +4206,38 @@ def run_single_prompt(video_id, prompt_name):
     if payload_size > 1_000_000:
         print(f"   ⚠️  Large payload warning: This may take longer to process")
     
-    # Run the prompt
-    result = runner.run_claude_prompt(
-        video_id=video_id,
-        prompt_name=prompt_name,
-        prompt_text=prompt_text,
-        context_data=context_data
-    )
+    # Run the prompt with enhanced error handling
+    try:
+        result = runner.run_claude_prompt(
+            video_id=video_id,
+            prompt_name=prompt_name,
+            prompt_text=prompt_text,
+            context_data=context_data
+        )
 
-    if result and result.get('success'):
-        print(f"✅ {prompt_name} completed successfully!")
-        update_progress(video_id, prompt_name, 'completed', 'Success')
-        return True
-    else:
-        error_msg = result.get('error', 'Unknown error') if result else 'No result returned'
-        print(f"❌ {prompt_name} failed!")
+        if result and result.get('success'):
+            print(f"✅ {prompt_name} completed successfully!")
+            update_progress(video_id, prompt_name, 'completed', 'Success')
+            return True
+        else:
+            error_msg = result.get('error', 'Unknown error') if result else 'No result returned'
+            print(f"❌ {prompt_name} failed!")
+            print(f"Error: {error_msg}")
+            
+            # Log additional error details if available
+            if result and 'traceback' in result:
+                print(f"\n📋 Detailed Error Traceback:", file=sys.stderr)
+                print(result['traceback'], file=sys.stderr)
+            
+            update_progress(video_id, prompt_name, 'failed', error_msg)
+            return False
+    except Exception as e:
+        import traceback
+        error_msg = f"{type(e).__name__}: {str(e)}"
+        print(f"❌ {prompt_name} crashed with exception!")
         print(f"Error: {error_msg}")
+        print(f"\n📋 Exception Traceback:", file=sys.stderr)
+        traceback.print_exc(file=sys.stderr)
         update_progress(video_id, prompt_name, 'failed', error_msg)
         return False
 def main():
@@ -4297,4 +4313,11 @@ def main():
     
     return 0 if successful == len(prompts) else 1
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except Exception as e:
+        import traceback
+        print(f"\n🔴 FATAL ERROR: {type(e).__name__}: {str(e)}", file=sys.stderr)
+        print("\n📋 Full Traceback:", file=sys.stderr)
+        traceback.print_exc(file=sys.stderr)
+        sys.exit(1)

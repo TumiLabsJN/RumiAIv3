@@ -313,12 +313,14 @@ class ClaudeInsightRunner:
             max_retries = 3
             for attempt in range(max_retries):
                 try:
-                    response = requests.post(
-                        self.api_url, 
-                        headers=headers, 
-                        data=compact_data,
-                        timeout=timeout
-                    )
+                    # Create fresh session for each request to avoid stale connections
+                    with requests.Session() as session:
+                        response = session.post(
+                            self.api_url, 
+                            headers=headers, 
+                            data=compact_data,
+                            timeout=timeout
+                        )
                     
                     if response.status_code == 200:
                         result = response.json()
@@ -350,11 +352,26 @@ class ClaudeInsightRunner:
                             'success': False,
                             'error': f"Request timed out after {max_retries} attempts"
                         }
+                except requests.exceptions.ConnectionError as e:
+                    # Handle connection errors (including RemoteDisconnected)
+                    if attempt < max_retries - 1:
+                        wait_time = (attempt + 1) * 5  # 5s, 10s, 15s
+                        print(f"🔌 Connection error: {str(e)}")
+                        print(f"⏳ Retrying in {wait_time}s (attempt {attempt + 1}/{max_retries})...")
+                        time.sleep(wait_time)
+                        continue
+                    else:
+                        return {
+                            'success': False,
+                            'error': f"Connection error after {max_retries} attempts: {str(e)}"
+                        }
                 
         except Exception as e:
+            import traceback
             return {
                 'success': False,
-                'error': str(e)
+                'error': f"{type(e).__name__}: {str(e)}",
+                'traceback': traceback.format_exc()
             }
     
     def _update_metadata(self, video_id, prompt_name):

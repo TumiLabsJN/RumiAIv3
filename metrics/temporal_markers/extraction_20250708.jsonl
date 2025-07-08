@@ -15,3 +15,15 @@
 {"timestamp": "2025-07-08T11:14:23.984019", "video_id": "7395982344001309957", "success": true, "extraction_time": 0.0024385452270507812, "marker_size_kb": 0.4384765625, "error": null}
 {"timestamp": "2025-07-08T11:14:30.814738", "video_id": "7395982344001309957", "success": true, "extraction_time": 0.0033864974975585938, "marker_size_kb": 0.4384765625, "error": null}
 {"timestamp": "2025-07-08T11:14:34.871303", "video_id": "7395982344001309957", "success": true, "extraction_time": 0.002171039581298828, "marker_size_kb": 0.4384765625, "error": null}
+{"timestamp": "2025-07-08T12:38:00.439431", "video_id": "7401897630910909727", "success": true, "extraction_time": 0.0014185905456542969, "marker_size_kb": 0.42578125, "error": null}
+{"timestamp": "2025-07-08T12:38:25.304020", "video_id": "7401897630910909727", "success": true, "extraction_time": 0.001268148422241211, "marker_size_kb": 0.42578125, "error": null}
+{"timestamp": "2025-07-08T12:38:46.316741", "video_id": "7401897630910909727", "success": true, "extraction_time": 0.0011434555053710938, "marker_size_kb": 0.42578125, "error": null}
+{"timestamp": "2025-07-08T14:45:05.186729", "video_id": "7489170104832281886", "success": true, "extraction_time": 0.0024569034576416016, "marker_size_kb": 0.42578125, "error": null}
+{"timestamp": "2025-07-08T14:45:32.932088", "video_id": "7489170104832281886", "success": true, "extraction_time": 0.0021283626556396484, "marker_size_kb": 0.42578125, "error": null}
+{"timestamp": "2025-07-08T14:45:56.017851", "video_id": "7489170104832281886", "success": true, "extraction_time": 0.002135038375854492, "marker_size_kb": 0.42578125, "error": null}
+{"timestamp": "2025-07-08T15:26:03.053971", "video_id": "7374228033655393579", "success": true, "extraction_time": 0.002280712127685547, "marker_size_kb": 0.42578125, "error": null}
+{"timestamp": "2025-07-08T15:26:25.274076", "video_id": "7374228033655393579", "success": true, "extraction_time": 0.0017714500427246094, "marker_size_kb": 0.42578125, "error": null}
+{"timestamp": "2025-07-08T15:26:39.046629", "video_id": "7374228033655393579", "success": true, "extraction_time": 0.0018031597137451172, "marker_size_kb": 0.42578125, "error": null}
+{"timestamp": "2025-07-08T16:28:54.526054", "video_id": "7514742576998534443", "success": true, "extraction_time": 0.0026929378509521484, "marker_size_kb": 0.42578125, "error": null}
+{"timestamp": "2025-07-08T16:29:22.092577", "video_id": "7514742576998534443", "success": true, "extraction_time": 0.00950479507446289, "marker_size_kb": 0.42578125, "error": null}
+{"timestamp": "2025-07-08T16:29:50.015988", "video_id": "7514742576998534443", "success": true, "extraction_time": 0.0019745826721191406, "marker_size_kb": 0.42578125, "error": null}
