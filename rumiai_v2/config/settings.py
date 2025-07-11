@@ -25,7 +25,10 @@ class Settings:
         self.apify_token = os.getenv('APIFY_API_TOKEN', '')
         
         # Model settings
-        self.claude_model = os.getenv('CLAUDE_MODEL', 'claude-3-haiku-20240307')
+        default_model = 'claude-3-haiku-20240307'
+        if os.getenv('USE_CLAUDE_SONNET', 'false').lower() == 'true':
+            default_model = 'claude-3-5-sonnet-20241022'
+        self.claude_model = os.getenv('CLAUDE_MODEL', default_model)
         
         # Paths
         self.output_dir = Path(os.getenv('RUMIAI_OUTPUT_DIR', 'outputs'))
@@ -54,6 +57,26 @@ class Settings:
         self.temporal_markers_enabled = os.getenv('RUMIAI_TEMPORAL_MARKERS', 'true').lower() == 'true'
         self.strict_mode = os.getenv('RUMIAI_STRICT_MODE', 'false').lower() == 'true'
         self.cleanup_video = os.getenv('RUMIAI_CLEANUP_VIDEO', 'false').lower() == 'true'
+        
+        # ML Enhancement Feature Flags
+        self.use_ml_precompute = os.getenv('USE_ML_PRECOMPUTE', 'false').lower() == 'true'
+        self.use_claude_sonnet = os.getenv('USE_CLAUDE_SONNET', 'false').lower() == 'true'
+        self.output_format_version = os.getenv('OUTPUT_FORMAT_VERSION', 'v1')  # v1 (legacy) or v2 (6-block)
+        
+        # Precompute settings - control which prompts use precompute
+        self.precompute_enabled_prompts = {
+            'creative_density': os.getenv('PRECOMPUTE_CREATIVE_DENSITY', 'false').lower() == 'true',
+            'emotional_journey': os.getenv('PRECOMPUTE_EMOTIONAL_JOURNEY', 'false').lower() == 'true',
+            'person_framing': os.getenv('PRECOMPUTE_PERSON_FRAMING', 'false').lower() == 'true',
+            'scene_pacing': os.getenv('PRECOMPUTE_SCENE_PACING', 'false').lower() == 'true',
+            'speech_analysis': os.getenv('PRECOMPUTE_SPEECH_ANALYSIS', 'false').lower() == 'true',
+            'visual_overlay_analysis': os.getenv('PRECOMPUTE_VISUAL_OVERLAY', 'false').lower() == 'true',
+            'metadata_analysis': os.getenv('PRECOMPUTE_METADATA', 'false').lower() == 'true'
+        }
+        
+        # Cost control settings
+        self.claude_cost_threshold = float(os.getenv('CLAUDE_COST_THRESHOLD', '0.10'))  # Alert if single prompt > $0.10
+        self.enable_cost_monitoring = os.getenv('ENABLE_COST_MONITORING', 'true').lower() == 'true'
         
         # Load prompt templates
         self._prompt_templates = self._load_prompt_templates()
@@ -194,5 +217,10 @@ Provide insights on the video's editing rhythm and viewer attention management."
             'prompt_delay': self.prompt_delay,
             'temporal_markers_enabled': self.temporal_markers_enabled,
             'strict_mode': self.strict_mode,
-            'cleanup_video': self.cleanup_video
+            'cleanup_video': self.cleanup_video,
+            'use_ml_precompute': self.use_ml_precompute,
+            'use_claude_sonnet': self.use_claude_sonnet,
+            'output_format_version': self.output_format_version,
+            'precompute_enabled_prompts': self.precompute_enabled_prompts,
+            'enable_cost_monitoring': self.enable_cost_monitoring
         }

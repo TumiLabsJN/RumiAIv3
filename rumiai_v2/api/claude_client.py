@@ -53,9 +53,25 @@ class ClaudeClient:
     CRITICAL: Uses fresh sessions to avoid connection pool issues.
     """
     
-    # Pricing per million tokens (Haiku model)
-    PRICE_PER_MILLION_INPUT_TOKENS = 0.25
-    PRICE_PER_MILLION_OUTPUT_TOKENS = 1.25
+    # Pricing per million tokens by model
+    MODEL_PRICING = {
+        "claude-3-haiku-20240307": {
+            "input": 0.25,
+            "output": 1.25
+        },
+        "claude-3-sonnet-20241022": {
+            "input": 3.00,
+            "output": 15.00
+        },
+        "claude-3-5-sonnet-20241022": {
+            "input": 3.00,
+            "output": 15.00
+        },
+        "claude-3-5-sonnet-20240620": {
+            "input": 3.00,
+            "output": 15.00
+        }
+    }
     
     def __init__(self, api_key: str, model: str = "claude-3-haiku-20240307"):
         self.api_key = api_key
@@ -64,6 +80,16 @@ class ClaudeClient:
         self.max_retries = 3
         self.base_delay = 5  # seconds
         self.metrics = APIMetrics()
+        
+        # Set default pricing based on initial model
+        if model in self.MODEL_PRICING:
+            pricing = self.MODEL_PRICING[model]
+            self.PRICE_PER_MILLION_INPUT_TOKENS = pricing["input"]
+            self.PRICE_PER_MILLION_OUTPUT_TOKENS = pricing["output"]
+        else:
+            # Default to Haiku pricing if model unknown
+            self.PRICE_PER_MILLION_INPUT_TOKENS = 0.25
+            self.PRICE_PER_MILLION_OUTPUT_TOKENS = 1.25
     
     def send_prompt(self, prompt: str, context_data: Dict[str, Any], 
                    timeout: int = 60, max_tokens: int = 1500) -> PromptResult:
@@ -74,6 +100,18 @@ class ClaudeClient:
         """
         prompt_type = context_data.get('prompt_type', 'unknown')
         video_id = context_data.get('video_id', 'unknown')
+        
+        # Allow model override in context_data
+        model_to_use = context_data.get('model', self.model)
+        
+        # Update pricing if using different model
+        if model_to_use != self.model and model_to_use in self.MODEL_PRICING:
+            pricing = self.MODEL_PRICING[model_to_use]
+            input_price = pricing["input"]
+            output_price = pricing["output"]
+        else:
+            input_price = self.PRICE_PER_MILLION_INPUT_TOKENS
+            output_price = self.PRICE_PER_MILLION_OUTPUT_TOKENS
         
         # Import PromptType enum for creating result
         from ..core.models.prompt import PromptType
@@ -108,7 +146,7 @@ class ClaudeClient:
         }
         
         request_data = {
-            "model": self.model,
+            "model": model_to_use,
             "messages": messages,
             "max_tokens": max_tokens,
             "temperature": 0.7
@@ -117,7 +155,7 @@ class ClaudeClient:
         # Log request size
         request_json = json.dumps(request_data)
         request_size = len(request_json)
-        logger.info(f"Sending {prompt_type} prompt for {video_id}: {request_size} bytes")
+        logger.info(f"Sending {prompt_type} prompt for {video_id} using {model_to_use}: {request_size} bytes")
         
         # CRITICAL: Track retry attempts for monitoring
         retry_metadata = {
@@ -156,8 +194,8 @@ class ClaudeClient:
                     total_tokens = input_tokens + output_tokens
                     
                     # Calculate cost
-                    input_cost = (input_tokens / 1_000_000) * self.PRICE_PER_MILLION_INPUT_TOKENS
-                    output_cost = (output_tokens / 1_000_000) * self.PRICE_PER_MILLION_OUTPUT_TOKENS
+                    input_cost = (input_tokens / 1_000_000) * input_price
+                    output_cost = (output_tokens / 1_000_000) * output_price
                     total_cost = input_cost + output_cost
                     
                     # Track successful call

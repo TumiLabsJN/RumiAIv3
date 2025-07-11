@@ -14,6 +14,8 @@ from typing import Dict, Any, Optional
 import json
 import os
 import time
+import psutil
+import gc
 
 # Load .env file if it exists
 from dotenv import load_dotenv
@@ -25,11 +27,14 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from rumiai_v2.api import ClaudeClient, ApifyClient, MLServices
 from rumiai_v2.processors import (
     VideoAnalyzer, TimelineBuilder, TemporalMarkerProcessor,
-    MLDataExtractor, PromptBuilder
+    MLDataExtractor, PromptBuilder, OutputAdapter,
+    get_compute_function, COMPUTE_FUNCTIONS
 )
+from rumiai_v2.prompts import PromptManager
 from rumiai_v2.core.models import PromptType, PromptBatch, VideoMetadata
 from rumiai_v2.config import Settings
 from rumiai_v2.utils import FileHandler, Logger, Metrics, VideoProcessingMetrics
+from rumiai_v2.validators import ResponseValidator
 
 # Configure logging
 logger = Logger.setup('rumiai_v2', level=os.getenv('LOG_LEVEL', 'INFO'))
@@ -71,6 +76,59 @@ class RumiAIRunner:
         self.temporal_processor = TemporalMarkerProcessor()
         self.ml_extractor = MLDataExtractor()
         self.prompt_builder = PromptBuilder(self.settings._prompt_templates)
+        self.prompt_manager = PromptManager()
+        self.output_adapter = OutputAdapter()
+        
+        # Verify GPU availability at startup
+        self._verify_gpu()
+    
+    def _verify_gpu(self) -> None:
+        """Verify GPU/CUDA availability at startup."""
+        try:
+            import torch
+            if torch.cuda.is_available():
+                device_name = torch.cuda.get_device_name(0)
+                memory = torch.cuda.get_device_properties(0).total_memory / 1024**3
+                logger.info(f"✅ GPU available: {device_name} with {memory:.1f}GB VRAM")
+                print(f"🎮 GPU: {device_name} ({memory:.1f}GB VRAM)")
+            else:
+                logger.warning("⚠️ No GPU detected, using CPU (will be slower)")
+                print("⚠️ WARNING: No GPU detected, processing will be slower")
+        except ImportError:
+            logger.warning("PyTorch not installed, cannot check GPU availability")
+        except Exception as e:
+            logger.warning(f"Could not verify GPU: {e}")
+    
+    def _get_memory_usage(self) -> Dict[str, float]:
+        """Get current memory usage statistics."""
+        process = psutil.Process()
+        memory_info = process.memory_info()
+        
+        # Get system memory
+        virtual_memory = psutil.virtual_memory()
+        
+        return {
+            'process_rss_gb': memory_info.rss / 1024**3,
+            'process_vms_gb': memory_info.vms / 1024**3,
+            'system_percent': virtual_memory.percent,
+            'system_available_gb': virtual_memory.available / 1024**3
+        }
+    
+    def _check_memory_threshold(self, threshold_gb: float = 4.0) -> bool:
+        """Check if we're approaching memory limits."""
+        memory = self._get_memory_usage()
+        
+        if memory['process_rss_gb'] > threshold_gb:
+            logger.warning(f"High memory usage: {memory['process_rss_gb']:.1f}GB")
+            # Force garbage collection
+            gc.collect()
+            return True
+        
+        if memory['system_percent'] > 90:
+            logger.warning(f"System memory critically low: {memory['system_percent']:.1f}%")
+            return True
+        
+        return False
     
     async def process_video_url(self, video_url: str) -> Dict[str, Any]:
         """
@@ -95,7 +153,18 @@ class RumiAIRunner:
             
             # Step 3: Run ML analysis
             print("📊 running_ml_analysis... (20%)")
+            # Check memory before ML analysis
+            initial_memory = self._get_memory_usage()
+            logger.info(f"Memory before ML: {initial_memory['process_rss_gb']:.1f}GB")
+            
             ml_results = await self._run_ml_analysis(video_id, video_path)
+            
+            # Check memory after ML analysis
+            post_ml_memory = self._get_memory_usage()
+            logger.info(f"Memory after ML: {post_ml_memory['process_rss_gb']:.1f}GB")
+            
+            if self._check_memory_threshold():
+                print("⚠️ High memory usage detected, forcing garbage collection...")
             
             # Step 4: Build unified timeline
             print("📊 building_timeline... (50%)")
@@ -123,7 +192,11 @@ class RumiAIRunner:
             
             # Step 7: Run Claude prompts
             print("📊 running_claude_prompts... (70%)")
-            prompt_results = await self._run_claude_prompts(unified_analysis)
+            # Use v2 if feature flag is enabled
+            if self.settings.use_ml_precompute:
+                prompt_results = await self._run_claude_prompts_v2(unified_analysis)
+            else:
+                prompt_results = await self._run_claude_prompts(unified_analysis)
             
             # Step 8: Generate final report
             print("📊 generating_report... (95%)")
@@ -197,7 +270,11 @@ class RumiAIRunner:
             
             # Run Claude prompts
             print("🧠 Running Claude prompts...")
-            prompt_results = await self._run_claude_prompts(unified_analysis)
+            # Use v2 if feature flag is enabled
+            if self.settings.use_ml_precompute:
+                prompt_results = await self._run_claude_prompts_v2(unified_analysis)
+            else:
+                prompt_results = await self._run_claude_prompts(unified_analysis)
             
             # Generate report
             report = self._generate_report(unified_analysis, prompt_results)
@@ -353,6 +430,169 @@ class RumiAIRunner:
         
         return batch.results
     
+    async def _run_claude_prompts_v2(self, analysis) -> Dict[str, Any]:
+        """Run Claude prompts with ML precompute (v2 mode)."""
+        self.metrics.start_timer('claude_prompts')
+        logger.info("Using ML precompute mode (v2)")
+        
+        # Define prompts to run
+        prompt_configs = [
+            ('creative_density', PromptType.CREATIVE_DENSITY),
+            ('emotional_journey', PromptType.EMOTIONAL_JOURNEY),
+            ('speech_analysis', PromptType.SPEECH_ANALYSIS),
+            ('visual_overlay_analysis', PromptType.VISUAL_OVERLAY),
+            ('metadata_analysis', PromptType.METADATA_ANALYSIS),
+            ('person_framing', PromptType.PERSON_FRAMING),
+            ('scene_pacing', PromptType.SCENE_PACING)
+        ]
+        
+        # Create prompt batch
+        batch = PromptBatch(
+            video_id=analysis.video_id,
+            prompts=[pt for _, pt in prompt_configs]
+        )
+        
+        # Get video data from analysis
+        video_duration = analysis.timeline.duration if hasattr(analysis, 'timeline') else 0
+        
+        # Process each prompt
+        for i, (compute_name, prompt_type) in enumerate(prompt_configs):
+            # Progress output for Node.js
+            progress = int((i / len(prompt_configs)) * 100)
+            print(f"\n[{'█' * (i+1)}{'░' * (len(prompt_configs)-i-1)}] {i+1}/{len(prompt_configs)} ({progress}%)")
+            print(f"🎬 Running {prompt_type.value} for video {analysis.video_id}")
+            
+            try:
+                # Get precompute function
+                compute_func = get_compute_function(compute_name)
+                if not compute_func:
+                    logger.warning(f"No compute function found for {compute_name}, falling back to legacy")
+                    # Fall back to legacy extraction
+                    context = self.ml_extractor.extract_for_prompt(analysis, prompt_type)
+                    prompt_text = self.prompt_builder.build_prompt(context)
+                else:
+                    # Run precompute function
+                    print(f"🔧 Running precompute for {compute_name}...")
+                    precomputed_metrics = compute_func(analysis.to_dict())
+                    
+                    # Build context for prompt
+                    context = {
+                        'video_id': analysis.video_id,
+                        'video_duration': video_duration,
+                        'precomputed_metrics': precomputed_metrics,
+                        'prompt_type': prompt_type.value
+                    }
+                    
+                    # Format prompt using new manager
+                    prompt_text = self.prompt_manager.format_prompt(compute_name, context)
+                
+                # Validate prompt size
+                is_valid, size_kb = self.prompt_manager.validate_prompt_size(prompt_text)
+                print(f"📏 Payload size: {size_kb}KB")
+                
+                if not is_valid:
+                    raise ValueError(f"Prompt too large: {size_kb}KB")
+                
+                # Calculate dynamic timeout based on size
+                base_timeout = self.settings.prompt_timeouts.get(prompt_type.value, 60)
+                size_factor = max(1, size_kb / 50)  # Scale timeout for larger prompts
+                dynamic_timeout = int(base_timeout * size_factor)
+                
+                # Use Sonnet if feature flag is enabled
+                model = "claude-3-5-sonnet-20241022" if self.settings.use_claude_sonnet else self.settings.claude_model
+                
+                # Send to Claude
+                self.metrics.start_timer(f'prompt_{prompt_type.value}')
+                result = self.claude.send_prompt(
+                    prompt_text,
+                    {
+                        'video_id': analysis.video_id,
+                        'prompt_type': prompt_type.value,
+                        'model': model
+                    },
+                    timeout=dynamic_timeout
+                )
+                prompt_time = self.metrics.stop_timer(f'prompt_{prompt_type.value}')
+                
+                # Handle 6-block output format validation
+                if result.success and self.settings.output_format_version == 'v2':
+                    # Validate response
+                    is_valid, parsed_data, validation_errors = ResponseValidator.validate_6block_response(
+                        result.response, 
+                        prompt_type.value
+                    )
+                    
+                    if is_valid and parsed_data:
+                        logger.info(f"Received valid 6-block response for {prompt_type.value}")
+                        
+                        # Store parsed data for later use
+                        result.parsed_response = parsed_data
+                        
+                        # Convert to legacy format if output format is v1
+                        if self.settings.output_format_version == 'v1':
+                            legacy_response = self.output_adapter.convert_6block_to_legacy(parsed_data, prompt_type.value)
+                            result.response = json.dumps(legacy_response)
+                    else:
+                        # Try to extract structure from text if JSON parsing failed
+                        extracted = ResponseValidator.extract_text_blocks(result.response)
+                        if extracted:
+                            logger.warning(f"Extracted 6-block structure from text for {prompt_type.value}")
+                            result.parsed_response = extracted
+                        else:
+                            logger.error(f"Invalid 6-block response for {prompt_type.value}: {', '.join(validation_errors)}")
+                            # Mark as failed if we can't parse the response
+                            result.success = False
+                            result.error = f"Invalid response format: {'; '.join(validation_errors)}"
+                
+                # Record metrics
+                self.video_metrics.record_prompt_time(prompt_type.value, prompt_time)
+                if result.success:
+                    self.video_metrics.record_prompt_cost(prompt_type.value, result.estimated_cost)
+                
+                # Save result
+                self._save_prompt_result(analysis.video_id, prompt_type.value, result)
+                
+                # Add to batch
+                batch.add_result(result)
+                
+                if result.success:
+                    print(f"✅ {prompt_type.value} completed successfully!")
+                    print(f"⏱️  {prompt_type.value} completed in {prompt_time:.1f}s")
+                else:
+                    print(f"❌ {prompt_type.value} failed: {result.error}")
+                
+                # Check memory after each prompt
+                if self._check_memory_threshold(threshold_gb=3.5):
+                    print("⚠️ Memory threshold reached, cleaning up...")
+                    gc.collect()
+                    await asyncio.sleep(2)  # Give system time to free memory
+                
+                # Delay between prompts
+                if i < len(prompt_configs) - 1 and self.settings.prompt_delay > 0:
+                    print(f"⏳ Waiting {self.settings.prompt_delay}s before next prompt...")
+                    await asyncio.sleep(self.settings.prompt_delay)
+                    
+            except Exception as e:
+                logger.error(f"Prompt {prompt_type.value} failed with exception: {str(e)}")
+                print(f"❌ {prompt_type.value} crashed: {str(e)}")
+                
+                # Create failed result
+                from rumiai_v2.core.models import PromptResult
+                result = PromptResult(
+                    prompt_type=prompt_type,
+                    success=False,
+                    error=str(e)
+                )
+                batch.add_result(result)
+        
+        self.metrics.stop_timer('claude_prompts')
+        
+        # Summary
+        print(f"\n📊 Prompt Summary: {batch.get_success_rate()*100:.0f}% success rate")
+        print(f"💰 Total cost: ${batch.get_total_cost():.4f}")
+        
+        return batch.results
+    
     def _save_prompt_result(self, video_id: str, prompt_name: str, result) -> None:
         """Save individual prompt result."""
         # Create directory structure
@@ -375,6 +615,11 @@ class RumiAIRunner:
     def _generate_report(self, analysis, prompt_results: Dict[str, Any]) -> Dict[str, Any]:
         """Generate final analysis report."""
         successful_prompts = sum(1 for r in prompt_results.values() if r.success)
+        total_cost = sum(r.estimated_cost for r in prompt_results.values() if r.success and r.estimated_cost)
+        total_tokens = sum(r.tokens_used for r in prompt_results.values() if r.success and r.tokens_used)
+        
+        # Get final memory usage
+        final_memory = self._get_memory_usage()
         
         return {
             'video_id': analysis.video_id,
@@ -384,6 +629,8 @@ class RumiAIRunner:
             'temporal_markers_generated': analysis.temporal_markers is not None,
             'prompts_successful': successful_prompts,
             'prompts_total': len(prompt_results),
+            'total_cost': total_cost,
+            'total_tokens': total_tokens,
             'prompt_details': {
                 name: {
                     'success': result.success,
@@ -394,7 +641,17 @@ class RumiAIRunner:
                 for name, result in prompt_results.items()
             },
             'processing_metrics': self.metrics.get_all(),
-            'video_metrics': self.video_metrics.get_summary()
+            'video_metrics': self.video_metrics.get_summary(),
+            'memory_usage': {
+                'final_process_gb': final_memory['process_rss_gb'],
+                'peak_process_gb': max(final_memory['process_rss_gb'], 4.0),  # Estimate peak
+                'system_percent': final_memory['system_percent']
+            },
+            'feature_flags': {
+                'ml_precompute': self.settings.use_ml_precompute,
+                'claude_sonnet': self.settings.use_claude_sonnet,
+                'output_format': self.settings.output_format_version
+            }
         }
 
 
